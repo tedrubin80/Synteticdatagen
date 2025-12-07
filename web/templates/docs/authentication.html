@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Authentication - API Docs{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3 mb-4">
+            <div class="card shadow-sm sticky-top" style="top: 80px;">
+                <div class="card-body">
+                    <h6 class="text-muted mb-3">DOCUMENTATION</h6>
+                    <nav class="nav flex-column">
+                        <a class="nav-link" href="{{ url_for('api_docs.index') }}">
+                            <i class="bi bi-house me-2"></i>Overview
+                        </a>
+                        <a class="nav-link active" href="{{ url_for('api_docs.authentication') }}">
+                            <i class="bi bi-key me-2"></i>Authentication
+                        </a>
+                        <a class="nav-link" href="{{ url_for('api_docs.endpoints') }}">
+                            <i class="bi bi-diagram-3 me-2"></i>Endpoints
+                        </a>
+                        <a class="nav-link" href="{{ url_for('api_docs.examples') }}">
+                            <i class="bi bi-code-slash me-2"></i>Examples
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <h1 class="mb-4">Authentication</h1>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5>API Key Authentication</h5>
+                    <p>All API requests require authentication using an API key. Include your API key in the <code>Authorization</code> header:</p>
+
+                    <div class="bg-dark text-light p-3 rounded mb-3">
+<pre class="mb-0"><code>Authorization: Bearer YOUR_API_KEY</code></pre>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <strong>Keep your API key secret!</strong> Do not share it publicly or commit it to version control.
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5>Getting Your API Key</h5>
+                    <ol>
+                        <li>Create an account or log in at <a href="{{ url_for('auth.register') }}">SynGen Pro</a></li>
+                        <li>Navigate to your <a href="{{ url_for('auth.profile') }}">Profile</a> page</li>
+                        <li>Your API key is displayed in the "API Key" section</li>
+                        <li>Click "Copy" to copy it to your clipboard</li>
+                    </ol>
+
+                    {% if current_user.is_authenticated %}
+                    <div class="alert alert-success">
+                        <i class="bi bi-check-circle me-2"></i>
+                        <strong>Your API Key:</strong>
+                        <code class="ms-2">{{ current_user.api_key[:20] }}...</code>
+                        <a href="{{ url_for('auth.profile') }}" class="ms-2">View full key</a>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <a href="{{ url_for('auth.login') }}">Log in</a> to view your API key.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5>Example Request</h5>
+                    <div class="bg-dark text-light p-3 rounded">
+<pre class="mb-0"><code># Using curl
+curl -X POST https://your-domain.com/api/generate \
+  -H "Authorization: Bearer sk_live_abc123..." \
+  -H "Content-Type: application/json" \
+  -d '{"rows": 10, "format": "json", "fields": [...]}'
+
+# Using Python
+import requests
+
+headers = {
+    "Authorization": "Bearer sk_live_abc123...",
+    "Content-Type": "application/json"
+}
+
+response = requests.post(
+    "https://your-domain.com/api/generate",
+    headers=headers,
+    json={"rows": 10, "format": "json", "fields": [...]}
+)</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>Error Responses</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Error</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>401</code></td>
+                                    <td>Unauthorized</td>
+                                    <td>Missing or invalid API key</td>
+                                </tr>
+                                <tr>
+                                    <td><code>403</code></td>
+                                    <td>Forbidden</td>
+                                    <td>API key is valid but lacks permission</td>
+                                </tr>
+                                <tr>
+                                    <td><code>429</code></td>
+                                    <td>Rate Limited</td>
+                                    <td>Daily request limit exceeded</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

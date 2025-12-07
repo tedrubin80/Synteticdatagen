@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+
+{% block title %}About{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="bg-primary text-white py-5">
+    <div class="container text-center py-4">
+        <h1 class="fw-bold">100% Free. No Strings Attached.</h1>
+        <p class="lead mb-0">Generate unlimited synthetic data at no cost</p>
+    </div>
+</section>
+
+<!-- Free Service Info -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow border-success">
+                    <div class="card-header bg-success text-white text-center py-3">
+                        <h4 class="mb-0"><i class="bi bi-gift me-2"></i>Free Forever</h4>
+                    </div>
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <span class="display-1 fw-bold text-success">$0</span>
+                            <p class="text-muted">No credit card required. No hidden fees. Ever.</p>
+                        </div>
+
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li class="mb-3">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                        <strong>Unlimited</strong> requests per day
+                                    </li>
+                                    <li class="mb-3">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                        Up to <strong>100,000</strong> rows per request
+                                    </li>
+                                    <li class="mb-3">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                        <strong>15+</strong> data types
+                                    </li>
+                                    <li class="mb-3">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                        CSV, JSON, SQL formats
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li class="mb-3">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                        Full <strong>API access</strong>
+                                    </li>
+                                    <li class="mb-3">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                        Interactive <strong>web UI</strong>
+                                    </li>
+                                    <li class="mb-3">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                        <strong>No ads</strong> or tracking
+                                    </li>
+                                    <li class="mb-3">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                        <strong>Open source</strong>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="text-center">
+                            {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('generator.index') }}" class="btn btn-success btn-lg">
+                                <i class="bi bi-lightning-charge-fill me-2"></i>Start Generating
+                            </a>
+                            {% else %}
+                            <a href="{{ url_for('auth.register') }}" class="btn btn-success btn-lg">
+                                <i class="bi bi-rocket-takeoff me-2"></i>Create Free Account
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Free Section -->
+<section class="bg-light py-5">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5">Why Is It Free?</h2>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                            <i class="bi bi-heart text-primary fs-3"></i>
+                        </div>
+                        <h5>Community First</h5>
+                        <p class="text-muted mb-0">We believe developers and testers should have access to quality tools without barriers.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                            <i class="bi bi-github text-success fs-3"></i>
+                        </div>
+                        <h5>Open Source</h5>
+                        <p class="text-muted mb-0">This project is open source. Contribute, fork, or self-host it yourself.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                            <i class="bi bi-lightbulb text-info fs-3"></i>
+                        </div>
+                        <h5>Learning Tool</h5>
+                        <p class="text-muted mb-0">Built as a learning project and shared to help others learn too.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Use Cases -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5">Perfect For</h2>
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex p-4 mb-3">
+                        <i class="bi bi-code-slash text-warning fs-2"></i>
+                    </div>
+                    <h5>Developers</h5>
+                    <p class="text-muted small">Seed databases, test APIs, and build prototypes with realistic data.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex p-4 mb-3">
+                        <i class="bi bi-bug text-danger fs-2"></i>
+                    </div>
+                    <h5>QA Engineers</h5>
+                    <p class="text-muted small">Generate diverse test data for comprehensive testing scenarios.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-4 mb-3">
+                        <i class="bi bi-mortarboard text-primary fs-2"></i>
+                    </div>
+                    <h5>Students</h5>
+                    <p class="text-muted small">Learn data handling with sample datasets for projects and assignments.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex p-4 mb-3">
+                        <i class="bi bi-easel text-success fs-2"></i>
+                    </div>
+                    <h5>Designers</h5>
+                    <p class="text-muted small">Create realistic mockups and demos with believable placeholder data.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section class="bg-light py-5">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5">Frequently Asked Questions</h2>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                Is this really free?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes, completely free! No premium tiers, no credit card required, no catch. The service is provided as-is for the community.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                Are there any usage limits?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                To ensure fair usage for everyone, there's a reasonable daily request limit. This helps keep the service running smoothly for all users.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                Is the generated data safe to use?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                All generated data is completely synthetic and random. It doesn't contain any real personal information and is safe to use in development, testing, and demos.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                Can I self-host this?
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Absolutely! The entire project is open source. Clone the repository, follow the setup instructions, and run your own instance.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                                How can I contribute?
+                            </button>
+                        </h2>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                We welcome contributions! Check out our GitHub repository, open issues, submit pull requests, or help improve documentation.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-5">
+    <div class="container text-center">
+        <h3 class="mb-4">Ready to generate some data?</h3>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('generator.index') }}" class="btn btn-primary btn-lg">
+            <i class="bi bi-lightning-charge-fill me-2"></i>Go to Generator
+        </a>
+        {% else %}
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg me-3">
+            <i class="bi bi-rocket-takeoff me-2"></i>Get Started
+        </a>
+        <a href="{{ url_for('api_docs.index') }}" class="btn btn-outline-primary btn-lg">
+            <i class="bi bi-book me-2"></i>Read the Docs
+        </a>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

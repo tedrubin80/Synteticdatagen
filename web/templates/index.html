@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-primary text-white py-5">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Generate Realistic Synthetic Data in Seconds</h1>
+                <p class="lead mb-4">Create high-quality test data for development, testing, and demos. Support for CSV, JSON, and SQL formats with 15+ data types.</p>
+                <div class="d-flex gap-3">
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('generator.index') }}" class="btn btn-light btn-lg">
+                        <i class="bi bi-lightning-charge-fill me-2"></i>Start Generating
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg">
+                        <i class="bi bi-rocket-takeoff me-2"></i>Get Started Free
+                    </a>
+                    <a href="{{ url_for('api_docs.index') }}" class="btn btn-outline-light btn-lg">
+                        <i class="bi bi-book me-2"></i>View API Docs
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6 mt-5 mt-lg-0">
+                <div class="card bg-dark text-light shadow-lg">
+                    <div class="card-header border-bottom border-secondary">
+                        <span class="text-danger me-2">●</span>
+                        <span class="text-warning me-2">●</span>
+                        <span class="text-success">●</span>
+                        <span class="ms-3 text-muted small">sample_output.json</span>
+                    </div>
+                    <div class="card-body">
+<pre class="mb-0 text-light"><code>[
+  {
+    "id": 1,
+    "name": "Sarah Johnson",
+    "email": "sarah.j@example.com",
+    "created_at": "2024-03-15"
+  },
+  {
+    "id": 2,
+    "name": "Michael Chen",
+    "email": "m.chen@example.com",
+    "created_at": "2024-03-16"
+  }
+]</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Why Choose SynGen Pro?</h2>
+            <p class="text-muted">Everything you need to generate professional test data</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                            <i class="bi bi-lightning-charge text-primary fs-3"></i>
+                        </div>
+                        <h5>Lightning Fast</h5>
+                        <p class="text-muted">Generate thousands of records in milliseconds. Our optimized engine handles large datasets with ease.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                            <i class="bi bi-sliders text-success fs-3"></i>
+                        </div>
+                        <h5>Highly Customizable</h5>
+                        <p class="text-muted">Configure field types, constraints, and formats. Create exactly the data structure you need.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                            <i class="bi bi-code-slash text-info fs-3"></i>
+                        </div>
+                        <h5>Developer Friendly</h5>
+                        <p class="text-muted">REST API with comprehensive documentation. Integrate into your CI/CD pipeline effortlessly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Data Types Section -->
+<section class="bg-light py-5">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">15+ Data Types Supported</h2>
+            <p class="text-muted">Generate realistic data for any use case</p>
+        </div>
+        <div class="row g-3 justify-content-center">
+            {% set data_types = [
+                ('bi-123', 'Integer', 'primary'),
+                ('bi-percent', 'Float', 'primary'),
+                ('bi-fonts', 'String', 'secondary'),
+                ('bi-person', 'Name', 'secondary'),
+                ('bi-building', 'Company', 'secondary'),
+                ('bi-envelope', 'Email', 'info'),
+                ('bi-telephone', 'Phone', 'info'),
+                ('bi-link-45deg', 'URL', 'info'),
+                ('bi-geo-alt', 'Address', 'success'),
+                ('bi-map', 'City', 'success'),
+                ('bi-globe', 'Country', 'success'),
+                ('bi-calendar', 'Date', 'warning'),
+                ('bi-clock', 'DateTime', 'warning'),
+                ('bi-toggle-on', 'Boolean', 'danger'),
+                ('bi-fingerprint', 'UUID', 'danger')
+            ] %}
+            {% for icon, name, color in data_types %}
+            <div class="col-auto">
+                <span class="badge bg-{{ color }} bg-opacity-10 text-{{ color }} px-3 py-2 fs-6">
+                    <i class="{{ icon }} me-1"></i>{{ name }}
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Output Formats Section -->
+<section class="py-5">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Multiple Output Formats</h2>
+            <p class="text-muted">Export your data in the format you need</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <i class="bi bi-filetype-csv me-2"></i>CSV
+                    </div>
+                    <div class="card-body">
+<pre class="bg-light p-3 rounded small mb-0"><code>id,name,email
+1,John Doe,john@example.com
+2,Jane Smith,jane@example.com</code></pre>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-header bg-warning text-dark">
+                        <i class="bi bi-filetype-json me-2"></i>JSON
+                    </div>
+                    <div class="card-body">
+<pre class="bg-light p-3 rounded small mb-0"><code>[
+  {"id": 1, "name": "John"},
+  {"id": 2, "name": "Jane"}
+]</code></pre>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <i class="bi bi-filetype-sql me-2"></i>SQL
+                    </div>
+                    <div class="card-body">
+<pre class="bg-light p-3 rounded small mb-0"><code>INSERT INTO users
+(id, name) VALUES
+(1, 'John Doe');
+(2, 'Jane Smith');</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="bg-primary text-white py-5">
+    <div class="container py-5 text-center">
+        <h2 class="fw-bold mb-4">Ready to Generate Your Data?</h2>
+        <p class="lead mb-4">Start with 100 free requests per day. No credit card required.</p>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('generator.index') }}" class="btn btn-light btn-lg">
+            <i class="bi bi-lightning-charge-fill me-2"></i>Go to Generator
+        </a>
+        {% else %}
+        <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg">
+            <i class="bi bi-rocket-takeoff me-2"></i>Create Free Account
+        </a>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

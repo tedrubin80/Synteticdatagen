@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}Examples - API Docs{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3 mb-4">
+            <div class="card shadow-sm sticky-top" style="top: 80px;">
+                <div class="card-body">
+                    <h6 class="text-muted mb-3">DOCUMENTATION</h6>
+                    <nav class="nav flex-column">
+                        <a class="nav-link" href="{{ url_for('api_docs.index') }}">
+                            <i class="bi bi-house me-2"></i>Overview
+                        </a>
+                        <a class="nav-link" href="{{ url_for('api_docs.authentication') }}">
+                            <i class="bi bi-key me-2"></i>Authentication
+                        </a>
+                        <a class="nav-link" href="{{ url_for('api_docs.endpoints') }}">
+                            <i class="bi bi-diagram-3 me-2"></i>Endpoints
+                        </a>
+                        <a class="nav-link active" href="{{ url_for('api_docs.examples') }}">
+                            <i class="bi bi-code-slash me-2"></i>Examples
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <h1 class="mb-4">Code Examples</h1>
+
+            <!-- Python Example -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <i class="bi bi-filetype-py me-2"></i>Python
+                </div>
+                <div class="card-body">
+                    <div class="bg-dark text-light p-3 rounded">
+<pre class="mb-0"><code>import requests
+
+API_KEY = "your_api_key_here"
+API_URL = "https://your-domain.com/api/generate"
+
+def generate_user_data(count=100):
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
+    }
+
+    payload = {
+        "rows": count,
+        "format": "json",
+        "fields": [
+            {"name": "id", "type": "integer", "constraints": {"min": 1, "max": 10000}},
+            {"name": "name", "type": "name"},
+            {"name": "email", "type": "email"},
+            {"name": "company", "type": "company"},
+            {"name": "signup_date", "type": "date", "constraints": {
+                "start": "2024-01-01",
+                "end": "2024-12-31"
+            }},
+            {"name": "is_active", "type": "boolean"}
+        ]
+    }
+
+    response = requests.post(API_URL, headers=headers, json=payload)
+    response.raise_for_status()
+
+    return response.json()["data"]
+
+# Generate 100 users
+users = generate_user_data(100)
+print(users)</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JavaScript Example -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <i class="bi bi-filetype-js me-2"></i>JavaScript / Node.js
+                </div>
+                <div class="card-body">
+                    <div class="bg-dark text-light p-3 rounded">
+<pre class="mb-0"><code>const API_KEY = 'your_api_key_here';
+const API_URL = 'https://your-domain.com/api/generate';
+
+async function generateProductData(count = 50) {
+  const response = await fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      rows: count,
+      format: 'json',
+      fields: [
+        { name: 'product_id', type: 'uuid' },
+        { name: 'name', type: 'string', constraints: { min_length: 5, max_length: 50 } },
+        { name: 'price', type: 'float', constraints: { min: 9.99, max: 999.99, precision: 2 } },
+        { name: 'in_stock', type: 'boolean' },
+        { name: 'created_at', type: 'datetime' }
+      ]
+    })
+  });
+
+  const result = await response.json();
+  return JSON.parse(result.data);
+}
+
+// Generate 50 products
+generateProductData(50).then(products => {
+  console.log(products);
+});</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- cURL Example -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <i class="bi bi-terminal me-2"></i>cURL
+                </div>
+                <div class="card-body">
+                    <div class="bg-dark text-light p-3 rounded">
+<pre class="mb-0"><code># Generate customer data as CSV
+curl -X POST https://your-domain.com/api/generate \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "rows": 200,
+    "format": "csv",
+    "fields": [
+      {"name": "customer_id", "type": "integer", "constraints": {"min": 1000, "max": 9999}},
+      {"name": "full_name", "type": "name"},
+      {"name": "email", "type": "email"},
+      {"name": "phone", "type": "phone"},
+      {"name": "address", "type": "address"},
+      {"name": "city", "type": "city"},
+      {"name": "country", "type": "country"}
+    ]
+  }' | jq -r '.data' > customers.csv</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SQL Example -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <i class="bi bi-database me-2"></i>Generate SQL INSERT Statements
+                </div>
+                <div class="card-body">
+                    <div class="bg-dark text-light p-3 rounded">
+<pre class="mb-0"><code># Generate SQL INSERT statements for seeding a database
+curl -X POST https://your-domain.com/api/generate \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "rows": 50,
+    "format": "sql",
+    "table_name": "employees",
+    "fields": [
+      {"name": "id", "type": "integer", "constraints": {"min": 1, "max": 1000}},
+      {"name": "name", "type": "name"},
+      {"name": "email", "type": "email"},
+      {"name": "department", "type": "company"},
+      {"name": "hire_date", "type": "date", "constraints": {"start": "2020-01-01", "end": "2024-12-31"}},
+      {"name": "is_manager", "type": "boolean"}
+    ]
+  }' | jq -r '.data' > seed_employees.sql
+
+# Output example:
+# INSERT INTO employees (id, name, email, department, hire_date, is_manager)
+# VALUES (423, 'John Smith', 'john.smith@example.com', 'Acme Corp', '2023-05-15', TRUE);</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Use Cases -->
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <i class="bi bi-lightbulb me-2"></i>Common Use Cases
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <h6><i class="bi bi-bug text-warning me-2"></i>Testing & QA</h6>
+                            <p class="small text-muted">Generate diverse test data to ensure your application handles various scenarios correctly.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="bi bi-database-add text-primary me-2"></i>Database Seeding</h6>
+                            <p class="small text-muted">Populate development databases with realistic data for local testing.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="bi bi-easel text-success me-2"></i>Demos & Prototypes</h6>
+                            <p class="small text-muted">Create convincing demo data for presentations and client showcases.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="bi bi-shield-check text-info me-2"></i>Privacy Compliance</h6>
+                            <p class="small text-muted">Replace sensitive production data with synthetic alternatives for safe analysis.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

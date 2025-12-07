@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block title %}API Documentation{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3 mb-4">
+            <div class="card shadow-sm sticky-top" style="top: 80px;">
+                <div class="card-body">
+                    <h6 class="text-muted mb-3">DOCUMENTATION</h6>
+                    <nav class="nav flex-column">
+                        <a class="nav-link active" href="{{ url_for('api_docs.index') }}">
+                            <i class="bi bi-house me-2"></i>Overview
+                        </a>
+                        <a class="nav-link" href="{{ url_for('api_docs.authentication') }}">
+                            <i class="bi bi-key me-2"></i>Authentication
+                        </a>
+                        <a class="nav-link" href="{{ url_for('api_docs.endpoints') }}">
+                            <i class="bi bi-diagram-3 me-2"></i>Endpoints
+                        </a>
+                        <a class="nav-link" href="{{ url_for('api_docs.examples') }}">
+                            <i class="bi bi-code-slash me-2"></i>Examples
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <h1 class="mb-4">API Documentation</h1>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5>Introduction</h5>
+                    <p>The SynGen Pro API allows you to programmatically generate synthetic data for your applications. Use it to create test data, seed databases, or generate sample datasets.</p>
+
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>Base URL:</strong> <code>https://your-domain.com/api</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5>Quick Start</h5>
+                    <p>Here's a simple example to get you started:</p>
+
+                    <div class="bg-dark text-light p-3 rounded">
+<pre class="mb-0"><code>curl -X POST https://your-domain.com/api/generate \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "rows": 10,
+    "format": "json",
+    "fields": [
+      {"name": "id", "type": "integer", "constraints": {"min": 1, "max": 1000}},
+      {"name": "email", "type": "email"},
+      {"name": "name", "type": "name"}
+    ]
+  }'</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5>Supported Data Types</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                    <th>Constraints</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>integer</code></td>
+                                    <td>Random integer value</td>
+                                    <td><code>min</code>, <code>max</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>float</code></td>
+                                    <td>Random decimal value</td>
+                                    <td><code>min</code>, <code>max</code>, <code>precision</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>string</code></td>
+                                    <td>Random string</td>
+                                    <td><code>min_length</code>, <code>max_length</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>name</code></td>
+                                    <td>Realistic person name</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><code>email</code></td>
+                                    <td>Valid email address</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><code>phone</code></td>
+                                    <td>Phone number</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><code>company</code></td>
+                                    <td>Company name</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><code>address</code></td>
+                                    <td>Street address</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><code>city</code></td>
+                                    <td>City name</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><code>country</code></td>
+                                    <td>Country name</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><code>date</code></td>
+                                    <td>Date (YYYY-MM-DD)</td>
+                                    <td><code>start</code>, <code>end</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>datetime</code></td>
+                                    <td>Date and time</td>
+                                    <td><code>start</code>, <code>end</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>boolean</code></td>
+                                    <td>True/False value</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><code>uuid</code></td>
+                                    <td>UUID v4</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><code>url</code></td>
+                                    <td>Website URL</td>
+                                    <td>-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>Rate Limits</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Plan</th>
+                                    <th>Requests/Day</th>
+                                    <th>Max Rows/Request</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="badge bg-secondary">Free</span></td>
+                                    <td>100</td>
+                                    <td>1,000</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-warning text-dark">Pro</span></td>
+                                    <td>10,000</td>
+                                    <td>100,000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
