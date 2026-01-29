@@ -14,6 +14,11 @@ def pricing():
     return render_template('pricing.html')
 
 
+@main_bp.route('/developers')
+def developers():
+    return render_template('developers.html')
+
+
 @main_bp.route('/dashboard')
 @login_required
 def dashboard():

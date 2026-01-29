@@ -1,0 +1,15 @@
+[Unit]
+Description=SynthGen Flask Web Application
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/Synteticdatagen/web
+Environment="PATH=/var/www/Synteticdatagen/venv/bin"
+ExecStart=/var/www/Synteticdatagen/venv/bin/gunicorn --workers 3 --bind 127.0.0.1:5000 'app:create_app()'
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
