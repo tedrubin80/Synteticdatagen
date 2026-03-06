@@ -30,8 +30,8 @@ class FieldConfig(BaseModel):
 
 class GenerateRequest(BaseModel):
     """Request to generate synthetic data."""
-    rows: int = Field(..., ge=1, le=1000, description="Number of rows to generate (1-1000)")
-    fields: List[FieldConfig] = Field(..., min_length=1, max_length=10, description="Field definitions (1-10 fields)")
+    rows: int = Field(..., ge=1, description="Number of rows to generate")
+    fields: List[FieldConfig] = Field(..., min_length=1, description="Field definitions")
     format: Literal["json", "csv", "sql"] = Field(default="json", description="Output format")
     table_name: Optional[str] = Field(default="synthetic_data", description="Table name for SQL format")
 

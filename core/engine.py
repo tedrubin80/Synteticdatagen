@@ -53,8 +53,8 @@ class SyntheticDataEngine:
 
     def generate(self, num_rows: int) -> List[Dict[str, Any]]:
         """Generate multiple rows of synthetic data."""
-        if num_rows < 1 or num_rows > 1000:
-            raise ValueError("Number of rows must be between 1 and 1000")
+        if num_rows < 1:
+            raise ValueError("Number of rows must be at least 1")
 
         return [self.generate_row() for _ in range(num_rows)]
 

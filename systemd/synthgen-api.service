@@ -6,7 +6,7 @@ After=network.target
 User=www-data
 Group=www-data
 WorkingDirectory=/var/www/Synteticdatagen
-Environment="PATH=/var/www/Synteticdatagen/venv/bin"
+Environment="PATH=/var/www/Synteticdatagen/venv/bin:/usr/local/bin:/usr/bin:/bin"
 ExecStart=/var/www/Synteticdatagen/venv/bin/uvicorn api.app:app --host 127.0.0.1 --port 8000
 Restart=always
 RestartSec=5
