@@ -10,9 +10,10 @@ A powerful, free tool for generating synthetic data with customizable fields and
 - **User Accounts** - Registration, login, API key management
 - **CLI Tool** - Command-line interface for scripting and automation
 - **REST API** - FastAPI-powered API for programmatic access
-- **15+ Data Types** - integers, floats, strings, emails, names, addresses, dates, and more
+- **35+ Data Types** - integers, floats, strings, emails, names, addresses, dates, call center metrics, demographics, and more
 - **Multiple Output Formats** - CSV, JSON, or SQL INSERT statements
 - **Scalable Generation** - Generate up to 100,000 records per request
+- **Kaggle Dataset Cloning** - Learn a real dataset's schema from Kaggle and generate a synthetic clone of it
 
 ## Quick Start
 
@@ -108,6 +109,49 @@ Synteticdatagen/
 | `datetime` | Date and time | `start`, `end` |
 | `boolean` | True/False | - |
 | `uuid` | UUID v4 | - |
+| `category` | Value sampled from a custom list | `choices`, `weights` |
+
+### Call Center Metrics
+
+| Type | Description | Constraints |
+|------|-------------|-------------|
+| `call_duration` | Call handle time in seconds (right-skewed) | `min`, `max`, `mean` |
+| `wait_time` | Time in queue before answer, in seconds | `min`, `max`, `mean` |
+| `hold_time` | Time on hold during the call, in seconds | `min`, `max`, `mean` |
+| `call_type` | Inbound / Outbound | `choices`, `weights` |
+| `call_channel` | Phone / Chat / Email / Social Media | `choices`, `weights` |
+| `call_department` | Queue/department that handled the call | `choices`, `weights` |
+| `agent_id` | Agent identifier from a bounded roster | `prefix`, `num_agents` |
+| `call_priority` | Low / Medium / High / Critical | `choices`, `weights` |
+| `call_outcome` | Resolved / Escalated / Abandoned / ... | `choices`, `weights` |
+| `resolution_status` | Resolved / Unresolved / Escalated / Pending | `choices`, `weights` |
+| `sentiment` | Positive / Neutral / Negative | `choices`, `weights` |
+| `csat_score` | Customer satisfaction score (skewed positive) | `scale`, `choices`, `weights` |
+| `nps_score` | Net Promoter Score response, 0-10 | `choices`, `weights` |
+
+### Demographics
+
+| Type | Description | Constraints |
+|------|-------------|-------------|
+| `age` | Age in years, skewed toward working adults | `min`, `max`, `mode` |
+| `gender` | Gender identity | `choices`, `weights` |
+| `ethnicity` | Race/ethnicity (US Census-style buckets) | `choices`, `weights` |
+| `marital_status` | Marital status | `choices`, `weights` |
+| `education_level` | Highest education attained | `choices`, `weights` |
+| `employment_status` | Employment status | `choices`, `weights` |
+| `income_bracket` | Household income bracket label | `choices`, `weights` |
+| `household_size` | Number of people in the household | `min`, `max`, `choices`, `weights` |
+| `language_preference` | Preferred language | `choices`, `weights` |
+| `generation` | Generational cohort (Gen Z, Millennial, ...) | `choices`, `weights` |
+
+Every categorical type above ships with a realistic default distribution but can be fully overridden, e.g.:
+
+```json
+{"name": "region", "type": "category", "constraints": {
+  "choices": ["West", "Midwest", "South", "Northeast"],
+  "weights": [0.24, 0.21, 0.38, 0.17]
+}}
+```
 
 ## Usage Examples
 
@@ -161,6 +205,43 @@ curl -X POST http://localhost:8000/generate \
     ]
   }'
 ```
+
+### Clone a Real Dataset from Kaggle
+
+Point Syngen at a public Kaggle dataset and it will infer a field schema
+(types + realistic distributions per column) and generate a fresh synthetic
+clone - the real rows are only used to learn the shape of the data and are
+never stored or returned.
+
+You'll need a Kaggle username and API key from
+[kaggle.com/settings](https://www.kaggle.com/settings) ("Create New Token").
+Credentials are sent per-request only; nothing is persisted server-side.
+
+```bash
+# Just learn the schema (no data generated)
+curl -X POST http://localhost:8000/kaggle/schema \
+  -H "Content-Type: application/json" \
+  -d '{
+    "kaggle_username": "your_username",
+    "kaggle_key": "your_api_key",
+    "dataset_ref": "owner/dataset-slug"
+  }'
+
+# Learn the schema and generate 500 synthetic rows in one call
+curl -X POST http://localhost:8000/kaggle/clone \
+  -H "Content-Type: application/json" \
+  -d '{
+    "kaggle_username": "your_username",
+    "kaggle_key": "your_api_key",
+    "dataset_ref": "owner/dataset-slug",
+    "rows": 500,
+    "format": "json"
+  }'
+```
+
+`/kaggle/search?query=...` is also available to find dataset refs by keyword.
+In the web app, use the "Clone Schema from Kaggle Dataset" panel on the
+Generator page to search, learn, and populate the field editor in one click.
 
 ## Web Application Features
 

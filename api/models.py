@@ -77,3 +77,44 @@ class ErrorResponse(BaseModel):
     success: bool = False
     error: str = Field(..., description="Error message")
     detail: Optional[str] = Field(None, description="Additional error details")
+
+
+class KaggleSearchRequest(BaseModel):
+    """Request to search Kaggle datasets. Credentials are used for this call only."""
+    kaggle_username: str = Field(..., description="Kaggle account username")
+    kaggle_key: str = Field(..., description="Kaggle API key (from kaggle.com/settings)")
+    query: str = Field(..., min_length=1, description="Search keywords")
+
+
+class KaggleDatasetInfo(BaseModel):
+    """Summary info about a Kaggle dataset."""
+    ref: str = Field(..., description="Dataset reference as owner/dataset-slug")
+    title: str
+    subtitle: Optional[str] = None
+    size: Optional[str] = None
+    last_updated: Optional[str] = None
+
+
+class KaggleSearchResponse(BaseModel):
+    """Response listing matching Kaggle datasets."""
+    success: bool = True
+    datasets: List[KaggleDatasetInfo]
+
+
+class KaggleCloneRequest(BaseModel):
+    """Request to learn a Kaggle dataset's schema and generate a synthetic clone of it."""
+    kaggle_username: str = Field(..., description="Kaggle account username")
+    kaggle_key: str = Field(..., description="Kaggle API key (from kaggle.com/settings)")
+    dataset_ref: str = Field(..., description="Dataset reference as owner/dataset-slug")
+    rows: int = Field(default=100, ge=1, description="Number of synthetic rows to generate")
+    format: Literal["json", "csv", "sql"] = Field(default="json", description="Output format")
+    table_name: Optional[str] = Field(default="synthetic_data", description="Table name for SQL format")
+    sample_rows: int = Field(default=2000, ge=10, le=20000, description="Rows to sample from the source dataset when learning its schema")
+
+
+class KaggleSchemaResponse(BaseModel):
+    """Response containing the schema learned from a Kaggle dataset, without any real data."""
+    success: bool = True
+    dataset_ref: str
+    fields: List[FieldConfig]
+    rows_sampled: int

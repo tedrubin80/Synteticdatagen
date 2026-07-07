@@ -36,6 +36,41 @@
                         </div>
                     </div>
 
+                    <!-- Kaggle Clone Section -->
+                    <div class="mb-4">
+                        <button class="btn btn-sm btn-outline-secondary w-100" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#kagglePanel">
+                            <i class="bi bi-cloud-download me-1"></i>Clone Schema from Kaggle Dataset
+                        </button>
+                        <div class="collapse mt-2" id="kagglePanel">
+                            <div class="card card-body bg-light">
+                                <p class="small text-muted mb-2">
+                                    Enter your Kaggle API credentials (from
+                                    <a href="https://www.kaggle.com/settings" target="_blank" rel="noopener">kaggle.com/settings</a>).
+                                    They're sent only for this request and are never stored.
+                                </p>
+                                <div class="row g-2 mb-2">
+                                    <div class="col-6">
+                                        <input type="text" class="form-control form-control-sm" id="kaggleUsername" placeholder="Kaggle username">
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="password" class="form-control form-control-sm" id="kaggleKey" placeholder="Kaggle API key">
+                                    </div>
+                                </div>
+                                <div class="input-group input-group-sm mb-2">
+                                    <input type="text" class="form-control" id="kaggleSearchQuery" placeholder="Search datasets, e.g. 'call center'">
+                                    <button class="btn btn-outline-secondary" onclick="kaggleSearch()" id="kaggleSearchBtn">Search</button>
+                                </div>
+                                <div id="kaggleResults" class="mb-2" style="max-height: 180px; overflow-y: auto;"></div>
+                                <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control" id="kaggleDatasetRef" placeholder="owner/dataset-slug">
+                                    <button class="btn btn-primary" onclick="kaggleLearn()" id="kaggleLearnBtn">Learn &amp; Load Fields</button>
+                                </div>
+                                <div class="small mt-2" id="kaggleStatus"></div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Fields Section -->
                     <div class="mb-3">
                         <div class="d-flex justify-content-between align-items-center mb-2">
@@ -122,6 +157,7 @@
             <div class="constraints-container mt-2" style="display: none;">
                 <!-- Constraints will be added dynamically -->
             </div>
+            <input type="hidden" class="constraints-json" value="">
         </div>
     </div>
 </template>
@@ -155,6 +191,39 @@ const fieldConstraints = {
     datetime: [
         { name: 'start', label: 'Start Date', type: 'date', default: '2024-01-01' },
         { name: 'end', label: 'End Date', type: 'date', default: '2024-12-31' }
+    ],
+    category: [
+        { name: 'choices', label: 'Choices (comma-separated)', type: 'text', default: 'Option A, Option B' }
+    ],
+    call_duration: [
+        { name: 'min', label: 'Min Seconds', type: 'number', default: 15 },
+        { name: 'max', label: 'Max Seconds', type: 'number', default: 1800 },
+        { name: 'mean', label: 'Typical Seconds', type: 'number', default: 240 }
+    ],
+    wait_time: [
+        { name: 'min', label: 'Min Seconds', type: 'number', default: 0 },
+        { name: 'max', label: 'Max Seconds', type: 'number', default: 900 },
+        { name: 'mean', label: 'Typical Seconds', type: 'number', default: 45 }
+    ],
+    hold_time: [
+        { name: 'min', label: 'Min Seconds', type: 'number', default: 0 },
+        { name: 'max', label: 'Max Seconds', type: 'number', default: 600 },
+        { name: 'mean', label: 'Typical Seconds', type: 'number', default: 30 }
+    ],
+    agent_id: [
+        { name: 'prefix', label: 'Prefix', type: 'text', default: 'AGT' },
+        { name: 'num_agents', label: 'Number of Agents', type: 'number', default: 50 }
+    ],
+    csat_score: [
+        { name: 'scale', label: 'Scale (1-N)', type: 'number', default: 5 }
+    ],
+    age: [
+        { name: 'min', label: 'Min Age', type: 'number', default: 18 },
+        { name: 'max', label: 'Max Age', type: 'number', default: 90 }
+    ],
+    household_size: [
+        { name: 'min', label: 'Min Size', type: 'number', default: 1 },
+        { name: 'max', label: 'Max Size', type: 'number', default: 7 }
     ]
 };
 
@@ -170,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
     addField();
 });
 
-function addField() {
+function addField(prefill) {
     const container = document.getElementById('fieldsContainer');
     const template = document.getElementById('fieldTemplate');
     const clone = template.content.cloneNode(true);
@@ -179,6 +248,24 @@ function addField() {
     const card = clone.querySelector('.field-card');
     card.dataset.fieldIndex = fieldCount;
     card.querySelector('.field-number').textContent = 'Field ' + fieldCount;
+
+    if (prefill) {
+        card.querySelector('.field-name').value = prefill.name || '';
+        const typeSelect = card.querySelector('.field-type');
+        typeSelect.value = prefill.type || '';
+
+        if (prefill.constraints && Object.keys(prefill.constraints).length > 0) {
+            // Constraints learned from real data (e.g. category weights) can't be
+            // fully round-tripped through the simple constraint inputs below, so
+            // they're kept as-is and shown read-only instead.
+            card.querySelector('.constraints-json').value = JSON.stringify(prefill.constraints);
+            const constraintsContainer = card.querySelector('.constraints-container');
+            constraintsContainer.style.display = 'block';
+            constraintsContainer.innerHTML = `<small class="text-muted d-block">
+                Learned from Kaggle: <code>${escapeHtml(JSON.stringify(prefill.constraints))}</code>
+            </small>`;
+        }
+    }
 
     container.appendChild(clone);
     document.getElementById('noFieldsMessage').style.display = 'none';
@@ -208,6 +295,7 @@ function updateConstraints(select) {
     const constraintsContainer = card.querySelector('.constraints-container');
     const fieldType = select.value;
 
+    card.querySelector('.constraints-json').value = '';
     constraintsContainer.innerHTML = '';
 
     if (fieldConstraints[fieldType]) {
@@ -242,11 +330,24 @@ function getFieldsConfig() {
 
         if (name && type) {
             const field = { name, type, constraints: {} };
+            const learnedJson = card.querySelector('.constraints-json').value;
 
-            card.querySelectorAll('.constraint-input').forEach(input => {
-                const value = input.type === 'number' ? parseFloat(input.value) : input.value;
-                field.constraints[input.dataset.constraint] = value;
-            });
+            if (learnedJson) {
+                field.constraints = JSON.parse(learnedJson);
+            } else {
+                card.querySelectorAll('.constraint-input').forEach(input => {
+                    const key = input.dataset.constraint;
+                    let value;
+                    if (key === 'choices') {
+                        value = input.value.split(',').map(v => v.trim()).filter(v => v.length > 0);
+                    } else if (input.type === 'number') {
+                        value = parseFloat(input.value);
+                    } else {
+                        value = input.value;
+                    }
+                    field.constraints[key] = value;
+                });
+            }
 
             fields.push(field);
         }
@@ -316,6 +417,99 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+function getKaggleCreds() {
+    return {
+        kaggle_username: document.getElementById('kaggleUsername').value.trim(),
+        kaggle_key: document.getElementById('kaggleKey').value.trim()
+    };
+}
+
+async function kaggleSearch() {
+    const query = document.getElementById('kaggleSearchQuery').value.trim();
+    const statusEl = document.getElementById('kaggleStatus');
+    const resultsEl = document.getElementById('kaggleResults');
+
+    if (!query) {
+        statusEl.innerHTML = '<span class="text-danger">Enter a search term first.</span>';
+        return;
+    }
+
+    const btn = document.getElementById('kaggleSearchBtn');
+    btn.disabled = true;
+    statusEl.textContent = 'Searching Kaggle...';
+    resultsEl.innerHTML = '';
+
+    try {
+        const response = await fetch('/generator/kaggle/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token() }}' },
+            body: JSON.stringify({ ...getKaggleCreds(), query })
+        });
+        const result = await response.json();
+
+        if (result.error) {
+            statusEl.innerHTML = `<span class="text-danger">${escapeHtml(result.error)}</span>`;
+            return;
+        }
+
+        statusEl.textContent = `${result.datasets.length} dataset(s) found.`;
+        result.datasets.forEach(ds => {
+            const item = document.createElement('div');
+            item.className = 'p-1 border-bottom small';
+            item.style.cursor = 'pointer';
+            item.innerHTML = `<strong>${escapeHtml(ds.ref)}</strong><br><span class="text-muted">${escapeHtml(ds.title || '')}</span>`;
+            item.addEventListener('click', () => {
+                document.getElementById('kaggleDatasetRef').value = ds.ref;
+            });
+            resultsEl.appendChild(item);
+        });
+    } catch (error) {
+        statusEl.innerHTML = `<span class="text-danger">Search failed: ${escapeHtml(error.message)}</span>`;
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+async function kaggleLearn() {
+    const datasetRef = document.getElementById('kaggleDatasetRef').value.trim();
+    const statusEl = document.getElementById('kaggleStatus');
+
+    if (!datasetRef.includes('/')) {
+        statusEl.innerHTML = '<span class="text-danger">Enter a dataset as owner/dataset-slug.</span>';
+        return;
+    }
+
+    const btn = document.getElementById('kaggleLearnBtn');
+    btn.disabled = true;
+    statusEl.textContent = 'Downloading and learning schema...';
+
+    try {
+        const response = await fetch('/generator/kaggle/learn', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token() }}' },
+            body: JSON.stringify({ ...getKaggleCreds(), dataset_ref: datasetRef })
+        });
+        const result = await response.json();
+
+        if (result.error) {
+            statusEl.innerHTML = `<span class="text-danger">${escapeHtml(result.error)}</span>`;
+            return;
+        }
+
+        // Replace the current field editor with the learned schema
+        document.getElementById('fieldsContainer').innerHTML = '';
+        fieldCount = 0;
+        result.fields.forEach(f => addField({ name: f.name, type: f.type, constraints: f.constraints }));
+
+        statusEl.innerHTML = `<span class="text-success">Loaded ${result.fields.length} field(s) from ` +
+            `${escapeHtml(result.dataset_ref)} (sampled ${result.rows_sampled} rows). Click "Generate Data" to clone it.</span>`;
+    } catch (error) {
+        statusEl.innerHTML = `<span class="text-danger">Learn failed: ${escapeHtml(error.message)}</span>`;
+    } finally {
+        btn.disabled = false;
+    }
 }
 
 function copyOutput() {
