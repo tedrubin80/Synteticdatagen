@@ -44,12 +44,20 @@
                         </button>
                         <div class="collapse mt-2" id="kagglePanel">
                             <div class="card card-body bg-light">
+                                {% if has_kaggle_creds %}
+                                <div class="alert alert-success py-2 px-3 small mb-2 d-flex justify-content-between align-items-center">
+                                    <span><i class="bi bi-check-circle me-1"></i>Using saved credentials for <strong>{{ kaggle_username }}</strong></span>
+                                    <a href="#" class="ms-2" onclick="toggleKaggleCredsOverride(); return false;" id="kaggleCredsToggle">Use different account</a>
+                                </div>
+                                {% else %}
                                 <p class="small text-muted mb-2">
                                     Enter your Kaggle API credentials (from
-                                    <a href="https://www.kaggle.com/settings" target="_blank" rel="noopener">kaggle.com/settings</a>).
-                                    They're sent only for this request and are never stored.
+                                    <a href="https://www.kaggle.com/settings" target="_blank" rel="noopener">kaggle.com/settings</a>),
+                                    or <a href="{{ url_for('auth.profile') }}">save them to your profile</a> to skip this next time.
+                                    They're sent only for this request.
                                 </p>
-                                <div class="row g-2 mb-2">
+                                {% endif %}
+                                <div class="row g-2 mb-2" id="kaggleCredsInputs" {% if has_kaggle_creds %}style="display: none;"{% endif %}>
                                     <div class="col-6">
                                         <input type="text" class="form-control form-control-sm" id="kaggleUsername" placeholder="Kaggle username">
                                     </div>
@@ -420,10 +428,19 @@ function escapeHtml(text) {
 }
 
 function getKaggleCreds() {
+    // Blank values fall back server-side to the user's saved credentials, if any.
     return {
         kaggle_username: document.getElementById('kaggleUsername').value.trim(),
         kaggle_key: document.getElementById('kaggleKey').value.trim()
     };
+}
+
+function toggleKaggleCredsOverride() {
+    const inputs = document.getElementById('kaggleCredsInputs');
+    const toggle = document.getElementById('kaggleCredsToggle');
+    const showing = inputs.style.display !== 'none';
+    inputs.style.display = showing ? 'none' : 'flex';
+    toggle.textContent = showing ? 'Use different account' : 'Use saved credentials';
 }
 
 async function kaggleSearch() {

@@ -66,7 +66,19 @@ FIELD_TYPES = [
 @generator_bp.route('/')
 @login_required
 def index():
-    return render_template('generator/index.html', field_types=FIELD_TYPES)
+    return render_template(
+        'generator/index.html',
+        field_types=FIELD_TYPES,
+        has_kaggle_creds=current_user.has_kaggle_credentials(),
+        kaggle_username=current_user.kaggle_username,
+    )
+
+
+def _resolve_kaggle_creds(data):
+    """Use credentials from the request if given, else fall back to the user's saved ones."""
+    username = (data.get('kaggle_username') or '').strip() or current_user.kaggle_username or ''
+    key = (data.get('kaggle_key') or '').strip() or (current_user.get_kaggle_key() or '')
+    return username, key
 
 
 @generator_bp.route('/generate', methods=['POST'])
@@ -187,8 +199,7 @@ def download():
 @login_required
 def kaggle_search():
     data = request.get_json() or {}
-    username = (data.get('kaggle_username') or '').strip()
-    key = (data.get('kaggle_key') or '').strip()
+    username, key = _resolve_kaggle_creds(data)
     query = (data.get('query') or '').strip()
 
     if not query:
@@ -222,8 +233,7 @@ def kaggle_learn():
     dataset rows and the submitted credentials are never persisted.
     """
     data = request.get_json() or {}
-    username = (data.get('kaggle_username') or '').strip()
-    key = (data.get('kaggle_key') or '').strip()
+    username, key = _resolve_kaggle_creds(data)
     dataset_ref = (data.get('dataset_ref') or '').strip()
 
     if '/' not in dataset_ref:

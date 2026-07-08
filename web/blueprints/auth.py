@@ -70,3 +70,28 @@ def regenerate_api_key():
     db.session.commit()
     flash('API key regenerated successfully.', 'success')
     return redirect(url_for('auth.profile'))
+
+
+@auth_bp.route('/kaggle-credentials', methods=['POST'])
+@login_required
+def save_kaggle_credentials():
+    username = request.form.get('kaggle_username', '').strip()
+    key = request.form.get('kaggle_key', '').strip()
+
+    if not username or not key:
+        flash('Both a Kaggle username and API key are required.', 'danger')
+        return redirect(url_for('auth.profile'))
+
+    current_user.set_kaggle_credentials(username, key)
+    db.session.commit()
+    flash('Kaggle credentials saved.', 'success')
+    return redirect(url_for('auth.profile'))
+
+
+@auth_bp.route('/kaggle-credentials/remove', methods=['POST'])
+@login_required
+def remove_kaggle_credentials():
+    current_user.clear_kaggle_credentials()
+    db.session.commit()
+    flash('Kaggle credentials removed.', 'info')
+    return redirect(url_for('auth.profile'))

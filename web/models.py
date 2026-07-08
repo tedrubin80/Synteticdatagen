@@ -22,6 +22,10 @@ class User(UserMixin, db.Model):
     total_requests = db.Column(db.Integer, default=0)
     last_request_date = db.Column(db.Date)
 
+    # Saved Kaggle credentials (key is encrypted at rest, see crypto_utils.py)
+    kaggle_username = db.Column(db.String(120))
+    kaggle_key_encrypted = db.Column(db.Text)
+
     # Relationships
     generation_history = db.relationship('GenerationHistory', backref='user', lazy='dynamic')
 
@@ -60,6 +64,24 @@ class User(UserMixin, db.Model):
             self.last_request_date = today
         self.requests_today += 1
         self.total_requests += 1
+
+    def set_kaggle_credentials(self, username, key):
+        from crypto_utils import encrypt_secret
+        self.kaggle_username = username
+        self.kaggle_key_encrypted = encrypt_secret(key)
+
+    def get_kaggle_key(self):
+        if not self.kaggle_key_encrypted:
+            return None
+        from crypto_utils import decrypt_secret
+        return decrypt_secret(self.kaggle_key_encrypted)
+
+    def has_kaggle_credentials(self):
+        return bool(self.kaggle_username and self.kaggle_key_encrypted)
+
+    def clear_kaggle_credentials(self):
+        self.kaggle_username = None
+        self.kaggle_key_encrypted = None
 
     def __repr__(self):
         return f'<User {self.username}>'
