@@ -154,9 +154,48 @@
                                     <td>Website URL</td>
                                     <td>-</td>
                                 </tr>
+                                <tr>
+                                    <td><code>category</code></td>
+                                    <td>Custom category from a weighted list</td>
+                                    <td><code>choices</code>, <code>weights</code></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
+
+                    <h6 class="mt-4">Call Center Types</h6>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm">
+                            <thead class="table-light">
+                                <tr><th>Type</th><th>Description</th><th>Constraints</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><code>call_duration</code></td><td>Handle time in seconds</td><td><code>min</code>, <code>max</code>, <code>mean</code></td></tr>
+                                <tr><td><code>wait_time</code></td><td>Queue wait time</td><td><code>min</code>, <code>max</code>, <code>mean</code></td></tr>
+                                <tr><td><code>csat_score</code></td><td>Customer satisfaction score</td><td><code>scale</code>, <code>choices</code>, <code>weights</code></td></tr>
+                                <tr><td><code>sentiment</code></td><td>Positive/Neutral/Negative</td><td><code>choices</code>, <code>weights</code></td></tr>
+                                <tr><td><code>agent_id</code></td><td>Agent identifier</td><td><code>prefix</code>, <code>num_agents</code></td></tr>
+                                <tr><td><code>call_outcome</code></td><td>How the call ended</td><td><code>choices</code>, <code>weights</code></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h6 class="mt-4">Demographic Types</h6>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm">
+                            <thead class="table-light">
+                                <tr><th>Type</th><th>Description</th><th>Constraints</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><code>age</code></td><td>Age in years</td><td><code>min</code>, <code>max</code>, <code>mode</code></td></tr>
+                                <tr><td><code>gender</code></td><td>Gender identity</td><td><code>choices</code>, <code>weights</code></td></tr>
+                                <tr><td><code>income_bracket</code></td><td>Household income range</td><td><code>choices</code>, <code>weights</code></td></tr>
+                                <tr><td><code>education_level</code></td><td>Highest education attained</td><td><code>choices</code>, <code>weights</code></td></tr>
+                                <tr><td><code>generation</code></td><td>Generational cohort</td><td><code>choices</code>, <code>weights</code></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-muted small">See <code>GET /api/field-types</code> for the complete list of 35+ types.</p>
                 </div>
             </div>
 
@@ -174,13 +213,8 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><span class="badge bg-secondary">Free</span></td>
-                                    <td>100</td>
+                                    <td><span class="badge bg-success">Free</span></td>
                                     <td>1,000</td>
-                                </tr>
-                                <tr>
-                                    <td><span class="badge bg-warning text-dark">Pro</span></td>
-                                    <td>10,000</td>
                                     <td>100,000</td>
                                 </tr>
                             </tbody>

@@ -8,12 +8,15 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 from config import Config
 
 db = SQLAlchemy()
 login_manager = LoginManager()
 csrf = CSRFProtect()
+limiter = Limiter(key_func=get_remote_address, storage_uri='memory://')
 
 
 def create_app(config_class=Config):
@@ -24,6 +27,7 @@ def create_app(config_class=Config):
     db.init_app(app)
     login_manager.init_app(app)
     csrf.init_app(app)
+    limiter.init_app(app)
 
     login_manager.login_view = 'auth.login'
     login_manager.login_message = 'Please log in to access this page.'
@@ -49,4 +53,5 @@ def create_app(config_class=Config):
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(debug=True, port=5000)
+    debug = os.environ.get('FLASK_DEBUG', '0') == '1'
+    app.run(debug=debug, port=5000)

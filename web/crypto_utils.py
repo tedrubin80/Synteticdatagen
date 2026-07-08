@@ -8,8 +8,12 @@ doesn't also expose stored third-party credentials.
 
 import base64
 import hashlib
+import os
+import sys
 
 from cryptography.fernet import Fernet, InvalidToken
+
+_IS_PRODUCTION = os.environ.get('FLASK_ENV') == 'production' or os.environ.get('PRODUCTION') == '1'
 
 
 def _load_key() -> bytes:
@@ -19,8 +23,11 @@ def _load_key() -> bytes:
     if raw:
         return raw.encode() if isinstance(raw, str) else raw
 
-    # Dev-only fallback so the app still runs out of the box. Never rely on
-    # this in production - set APP_ENCRYPTION_KEY to Fernet.generate_key().
+    if _IS_PRODUCTION:
+        print('FATAL: APP_ENCRYPTION_KEY must be set in production.', file=sys.stderr)
+        sys.exit(1)
+
+    # Dev-only fallback so the app still runs out of the box.
     digest = hashlib.sha256(f"dev-only:{Config.SECRET_KEY}".encode()).digest()
     return base64.urlsafe_b64encode(digest)
 

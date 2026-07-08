@@ -1,11 +1,26 @@
 import os
+import sys
 from datetime import timedelta
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+_DEFAULT_SECRET = 'dev-secret-key-change-in-production'
+_IS_PRODUCTION = os.environ.get('FLASK_ENV') == 'production' or os.environ.get('PRODUCTION') == '1'
+
+
+def _require_production_secret(name: str, value: str | None, default: str) -> str:
+    if _IS_PRODUCTION and (not value or value == default):
+        print(f'FATAL: {name} must be set in production.', file=sys.stderr)
+        sys.exit(1)
+    return value or default
+
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-in-production'
+    SECRET_KEY = _require_production_secret(
+        'SECRET_KEY',
+        os.environ.get('SECRET_KEY'),
+        _DEFAULT_SECRET,
+    )
     # Encrypts secrets stored on a user's behalf (e.g. saved Kaggle API keys).
     # Set this explicitly in production: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
     APP_ENCRYPTION_KEY = os.environ.get('APP_ENCRYPTION_KEY')
@@ -15,6 +30,11 @@ class Config:
 
     # Session settings
     PERMANENT_SESSION_LIFETIME = timedelta(days=7)
+    SESSION_COOKIE_SECURE = _IS_PRODUCTION
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    REMEMBER_COOKIE_SECURE = _IS_PRODUCTION
+    REMEMBER_COOKIE_HTTPONLY = True
 
     # App settings
     APP_NAME = 'SynGen Pro'

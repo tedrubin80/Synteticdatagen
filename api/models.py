@@ -30,7 +30,7 @@ class FieldConfig(BaseModel):
 
 class GenerateRequest(BaseModel):
     """Request to generate synthetic data."""
-    rows: int = Field(..., ge=1, description="Number of rows to generate")
+    rows: int = Field(..., ge=1, le=100_000, description="Number of rows to generate")
     fields: List[FieldConfig] = Field(..., min_length=1, description="Field definitions")
     format: Literal["json", "csv", "sql"] = Field(default="json", description="Output format")
     table_name: Optional[str] = Field(default="synthetic_data", description="Table name for SQL format")
@@ -106,7 +106,7 @@ class KaggleCloneRequest(BaseModel):
     kaggle_username: str = Field(..., description="Kaggle account username")
     kaggle_key: str = Field(..., description="Kaggle API key (from kaggle.com/settings)")
     dataset_ref: str = Field(..., description="Dataset reference as owner/dataset-slug")
-    rows: int = Field(default=100, ge=1, description="Number of synthetic rows to generate")
+    rows: int = Field(default=100, ge=1, le=100_000, description="Number of synthetic rows to generate")
     format: Literal["json", "csv", "sql"] = Field(default="json", description="Output format")
     table_name: Optional[str] = Field(default="synthetic_data", description="Table name for SQL format")
     sample_rows: int = Field(default=2000, ge=10, le=20000, description="Rows to sample from the source dataset when learning its schema")

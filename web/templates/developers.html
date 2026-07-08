@@ -256,6 +256,21 @@ console.log(data);</code></pre>
                                 <td><code>/api/generate/preview</code></td>
                                 <td>Preview data generation (max 10 rows)</td>
                             </tr>
+                            <tr>
+                                <td><span class="badge bg-warning text-dark">POST</span></td>
+                                <td><code>/api/kaggle/search</code></td>
+                                <td>Search Kaggle datasets</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-warning text-dark">POST</span></td>
+                                <td><code>/api/kaggle/schema</code></td>
+                                <td>Learn schema from a Kaggle dataset</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-warning text-dark">POST</span></td>
+                                <td><code>/api/kaggle/clone</code></td>
+                                <td>Generate synthetic clone of a Kaggle dataset</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -274,8 +289,8 @@ console.log(data);</code></pre>
 <section class="bg-light py-5">
     <div class="container py-4">
         <div class="text-center mb-5">
-            <h2 class="fw-bold">15+ Data Types</h2>
-            <p class="text-muted">Generate realistic data for any field</p>
+            <h2 class="fw-bold">35+ Field Types</h2>
+            <p class="text-muted">General, call center, and demographic fields</p>
         </div>
 
         <div class="row g-3 justify-content-center">
@@ -349,7 +364,7 @@ console.log(data);</code></pre>
 <section class="bg-primary text-white py-5">
     <div class="container py-4 text-center">
         <h2 class="fw-bold mb-4">Ready to Build?</h2>
-        <p class="lead mb-4">Start generating synthetic data today. Free tier includes 100 requests per day.</p>
+        <p class="lead mb-4">Start generating synthetic data today. 1,000 free requests per day, up to 100,000 rows per request.</p>
         <div class="d-flex justify-content-center gap-3 flex-wrap">
             {% if current_user.is_authenticated %}
             <a href="{{ url_for('generator.index') }}" class="btn btn-light btn-lg">

@@ -148,6 +148,32 @@ curl -X POST https://your-domain.com/api/generate \
                 </div>
             </div>
 
+            <!-- Call Center Example -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <i class="bi bi-headset me-2"></i>Call Center Metrics
+                </div>
+                <div class="card-body">
+                    <div class="bg-dark text-light p-3 rounded">
+<pre class="mb-0"><code>curl -X POST https://synthgenapp.dev/api/generate \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "rows": 100,
+    "format": "json",
+    "fields": [
+      {"name": "agent_id", "type": "agent_id", "constraints": {"prefix": "AGT", "num_agents": 50}},
+      {"name": "call_duration", "type": "call_duration", "constraints": {"min": 30, "max": 1800, "mean": 300}},
+      {"name": "wait_time", "type": "wait_time", "constraints": {"min": 0, "max": 600, "mean": 45}},
+      {"name": "csat_score", "type": "csat_score", "constraints": {"scale": 5}},
+      {"name": "sentiment", "type": "sentiment"},
+      {"name": "call_outcome", "type": "call_outcome"}
+    ]
+  }'</code></pre>
+                    </div>
+                </div>
+            </div>
+
             <!-- SQL Example -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header">
@@ -202,6 +228,14 @@ curl -X POST https://your-domain.com/api/generate \
                         <div class="col-md-6">
                             <h6><i class="bi bi-shield-check text-info me-2"></i>Privacy Compliance</h6>
                             <p class="small text-muted">Replace sensitive production data with synthetic alternatives for safe analysis.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="bi bi-headset text-danger me-2"></i>Contact Center QA</h6>
+                            <p class="small text-muted">Generate CSAT scores, wait times, and agent metrics for dashboard and analytics testing.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="bi bi-people text-secondary me-2"></i>Demographic Surveys</h6>
+                            <p class="small text-muted">Create realistic age, income, and education distributions for segmentation and survey prototypes.</p>
                         </div>
                     </div>
                 </div>

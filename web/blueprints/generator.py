@@ -84,9 +84,9 @@ def _resolve_kaggle_creds(data):
 @generator_bp.route('/generate', methods=['POST'])
 @login_required
 def generate():
-    if not current_user.can_make_request():
+    if not current_user.try_consume_request():
         return jsonify({
-            'error': 'Daily limit reached. Upgrade to Pro for more requests.'
+            'error': 'Daily limit reached. Your quota resets at midnight UTC.'
         }), 429
 
     data = request.get_json()
@@ -102,7 +102,7 @@ def generate():
     max_rows = current_user.get_max_rows()
     if rows > max_rows:
         return jsonify({
-            'error': f'Maximum {max_rows} rows allowed. Upgrade to Pro for more.'
+            'error': f'Maximum {max_rows:,} rows allowed per request.'
         }), 400
 
     if not fields:
@@ -143,8 +143,7 @@ def generate():
             output = JSONFormatter.format(generated_data)
             content_type = 'application/json'
 
-        # Track usage
-        current_user.increment_usage()
+        # Track usage (already consumed atomically at request start)
 
         # Save to history
         history = GenerationHistory(

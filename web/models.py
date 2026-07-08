@@ -48,6 +48,41 @@ class User(UserMixin, db.Model):
         from config import Config
         return Config.MAX_ROWS_PRO if self.is_pro else Config.MAX_ROWS_FREE
 
+    def try_consume_request(self):
+        """Atomically check quota and increment usage. Returns True if allowed."""
+        from datetime import date
+        from sqlalchemy import update, case, and_, or_
+
+        today = date.today()
+        limit = self.get_daily_limit()
+
+        stmt = (
+            update(User)
+            .where(
+                User.id == self.id,
+                or_(
+                    User.last_request_date.is_(None),
+                    User.last_request_date != today,
+                    and_(User.last_request_date == today, User.requests_today < limit),
+                ),
+            )
+            .values(
+                requests_today=case(
+                    (or_(User.last_request_date.is_(None), User.last_request_date != today), 1),
+                    else_=User.requests_today + 1,
+                ),
+                last_request_date=today,
+                total_requests=User.total_requests + 1,
+            )
+        )
+        result = db.session.execute(stmt)
+        if result.rowcount == 0:
+            db.session.rollback()
+            return False
+        db.session.commit()
+        db.session.refresh(self)
+        return True
+
     def can_make_request(self):
         from datetime import date
         today = date.today()

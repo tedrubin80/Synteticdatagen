@@ -14,7 +14,7 @@
                     <h4>{{ current_user.username }}</h4>
                     <p class="text-muted">{{ current_user.email }}</p>
                     <span class="badge {% if current_user.is_pro %}bg-warning{% else %}bg-secondary{% endif %}">
-                        {% if current_user.is_pro %}Pro{% else %}Free{% endif %} Plan
+                        Free Plan
                     </span>
                 </div>
             </div>
@@ -159,14 +159,10 @@
                         </tr>
                     </table>
 
-                    {% if not current_user.is_pro %}
-                    <hr>
-                    <div class="bg-primary bg-opacity-10 rounded p-3">
-                        <h6><i class="bi bi-star-fill text-warning me-2"></i>Upgrade to Pro</h6>
-                        <p class="small mb-2">Get 10,000 requests/day and generate up to 100,000 rows per request.</p>
-                        <a href="{{ url_for('main.pricing') }}" class="btn btn-primary btn-sm">View Plans</a>
+                    <div class="bg-success bg-opacity-10 rounded p-3">
+                        <h6><i class="bi bi-gift text-success me-2"></i>All Features Included</h6>
+                        <p class="small mb-0">1,000 requests/day and up to 100,000 rows per request — completely free, no premium tier.</p>
                     </div>
-                    {% endif %}
                 </div>
             </div>
         </div>

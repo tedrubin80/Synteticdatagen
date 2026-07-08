@@ -1,7 +1,10 @@
 """Schema definitions for synthetic data fields."""
 
+import re
 from typing import Any, Dict, Optional
 from dataclasses import dataclass, field
+
+_SAFE_IDENTIFIER = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')
 
 
 @dataclass
@@ -16,6 +19,12 @@ class FieldSchema:
         """Validate the field schema."""
         if not self.name or not isinstance(self.name, str):
             raise ValueError("Field name must be a non-empty string")
+
+        if not _SAFE_IDENTIFIER.match(self.name):
+            raise ValueError(
+                f"Field name '{self.name}' is invalid. "
+                "Use letters, numbers, and underscores; must start with a letter or underscore."
+            )
 
         valid_types = [
             'integer', 'float', 'string', 'email', 'phone',

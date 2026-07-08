@@ -1,6 +1,7 @@
 """FastAPI application for synthetic data generation."""
 
-from fastapi import FastAPI, HTTPException
+import os
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.responses import JSONResponse, PlainTextResponse
 from typing import Union
 import sys
@@ -19,13 +20,21 @@ from api.models import (
     KaggleSearchRequest, KaggleSearchResponse, KaggleDatasetInfo,
     KaggleCloneRequest, KaggleSchemaResponse,
 )
+from api.auth import (
+    ApiUser, get_current_user, consume_request_quota,
+    enforce_row_limit,
+)
+
+_IS_PRODUCTION = os.environ.get('PRODUCTION') == '1' or os.environ.get('FLASK_ENV') == 'production'
+_DOCS_ENABLED = os.environ.get('API_DOCS_ENABLED', '0' if _IS_PRODUCTION else '1') == '1'
 
 app = FastAPI(
     title="Syngen API",
     description="REST API for generating synthetic data with customizable fields and output formats",
     version="1.0.0",
-    docs_url="/docs",
-    redoc_url="/redoc"
+    docs_url="/docs" if _DOCS_ENABLED else None,
+    redoc_url="/redoc" if _DOCS_ENABLED else None,
+    openapi_url="/openapi.json" if _DOCS_ENABLED else None,
 )
 
 
@@ -253,7 +262,10 @@ async def get_field_types():
 
 
 @app.post("/generate", response_model=None, tags=["Generation"])
-async def generate_data(request: GenerateRequest):
+async def generate_data(
+    request: GenerateRequest,
+    user: ApiUser = Depends(consume_request_quota),
+):
     """
     Generate synthetic data based on field configuration.
 
@@ -263,6 +275,8 @@ async def generate_data(request: GenerateRequest):
     - sql: Returns SQL INSERT statements
     """
     try:
+        enforce_row_limit(request.rows, user)
+
         # Convert API model to FieldSchema objects
         fields = []
         for field_config in request.fields:
@@ -305,12 +319,17 @@ async def generate_data(request: GenerateRequest):
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal error: {str(e)}")
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=500, detail="An internal error occurred")
 
 
 @app.post("/generate/preview", response_model=GenerateResponse, tags=["Generation"])
-async def generate_preview(request: GenerateRequest):
+async def generate_preview(
+    request: GenerateRequest,
+    user: ApiUser = Depends(consume_request_quota),
+):
     """
     Generate a preview of synthetic data (always returns JSON, max 10 rows).
     Useful for testing field configurations before generating large datasets.
@@ -343,12 +362,17 @@ async def generate_preview(request: GenerateRequest):
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal error: {str(e)}")
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=500, detail="An internal error occurred")
 
 
 @app.post("/kaggle/search", response_model=KaggleSearchResponse, tags=["Kaggle"])
-async def kaggle_search(request: KaggleSearchRequest):
+async def kaggle_search(
+    request: KaggleSearchRequest,
+    user: ApiUser = Depends(consume_request_quota),
+):
     """
     Search public Kaggle datasets by keyword.
 
@@ -371,12 +395,17 @@ async def kaggle_search(request: KaggleSearchRequest):
         return KaggleSearchResponse(datasets=datasets)
     except KaggleError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=502, detail=f"Kaggle request failed: {str(e)}")
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=502, detail="Kaggle request failed")
 
 
 @app.post("/kaggle/schema", response_model=KaggleSchemaResponse, tags=["Kaggle"])
-async def kaggle_schema(request: KaggleCloneRequest):
+async def kaggle_schema(
+    request: KaggleCloneRequest,
+    user: ApiUser = Depends(consume_request_quota),
+):
     """
     Learn a synthetic-data field schema from a Kaggle dataset.
 
@@ -403,12 +432,15 @@ async def kaggle_schema(request: KaggleCloneRequest):
         raise HTTPException(status_code=400, detail=str(e))
     except HTTPException:
         raise
-    except Exception as e:
-        raise HTTPException(status_code=502, detail=f"Kaggle request failed: {str(e)}")
+    except Exception:
+        raise HTTPException(status_code=502, detail="Kaggle request failed")
 
 
 @app.post("/kaggle/clone", response_model=None, tags=["Kaggle"])
-async def kaggle_clone(request: KaggleCloneRequest):
+async def kaggle_clone(
+    request: KaggleCloneRequest,
+    user: ApiUser = Depends(consume_request_quota),
+):
     """
     Learn a Kaggle dataset's schema and generate a fresh synthetic clone of it.
 
@@ -416,6 +448,8 @@ async def kaggle_clone(request: KaggleCloneRequest):
     data is used only to infer column types and distributions, then discarded.
     """
     try:
+        enforce_row_limit(request.rows, user)
+
         owner, _, dataset = request.dataset_ref.partition("/")
         if not owner or not dataset:
             raise HTTPException(status_code=400, detail="dataset_ref must be in 'owner/dataset-slug' format")
@@ -455,8 +489,10 @@ async def kaggle_clone(request: KaggleCloneRequest):
         raise
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=502, detail=f"Kaggle request failed: {str(e)}")
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=502, detail="Kaggle request failed")
 
 
 if __name__ == "__main__":

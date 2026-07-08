@@ -7,7 +7,7 @@
 <section class="bg-primary text-white py-5">
     <div class="container text-center py-4">
         <h1 class="fw-bold">100% Free. No Strings Attached.</h1>
-        <p class="lead mb-0">Generate unlimited synthetic data at no cost</p>
+        <p class="lead mb-0">Generate synthetic data at no cost — 1,000 requests/day, 100,000 rows per request</p>
     </div>
 </section>
 
@@ -31,7 +31,7 @@
                                 <ul class="list-unstyled">
                                     <li class="mb-3">
                                         <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                        <strong>Unlimited</strong> requests per day
+                                        <strong>1,000</strong> requests per day
                                     </li>
                                     <li class="mb-3">
                                         <i class="bi bi-check-circle-fill text-success me-2"></i>
@@ -39,11 +39,11 @@
                                     </li>
                                     <li class="mb-3">
                                         <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                        <strong>15+</strong> data types
+                                        <strong>35+</strong> field types
                                     </li>
                                     <li class="mb-3">
                                         <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                        CSV, JSON, SQL formats
+                                        Call center &amp; demographic fields
                                     </li>
                                 </ul>
                             </div>
@@ -51,19 +51,15 @@
                                 <ul class="list-unstyled">
                                     <li class="mb-3">
                                         <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                        Full <strong>API access</strong>
+                                        CSV, JSON, SQL formats
                                     </li>
                                     <li class="mb-3">
                                         <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                        Interactive <strong>web UI</strong>
+                                        <strong>Kaggle</strong> dataset cloning
                                     </li>
                                     <li class="mb-3">
                                         <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                        <strong>No ads</strong> or tracking
-                                    </li>
-                                    <li class="mb-3">
-                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                        <strong>Open source</strong>
+                                        Encrypted credential storage
                                     </li>
                                 </ul>
                             </div>
@@ -203,7 +199,7 @@
                         </h2>
                         <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
-                                To ensure fair usage for everyone, there's a reasonable daily request limit. This helps keep the service running smoothly for all users.
+                                Free accounts include 1,000 API requests per day and up to 100,000 rows per generation request. These limits help keep the service available for everyone.
                             </div>
                         </div>
                     </div>
@@ -240,6 +236,18 @@
                         <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
                                 We welcome contributions! Check out our GitHub repository, open issues, submit pull requests, or help improve documentation.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                                How does Kaggle integration work?
+                            </button>
+                        </h2>
+                        <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Search public Kaggle datasets from the generator. SynGen learns the column schema from a sample — no real data is stored. Save your Kaggle API credentials encrypted on your <a href="{{ url_for('auth.profile') }}">Profile</a> page.
                             </div>
                         </div>
                     </div>

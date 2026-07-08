@@ -3,11 +3,12 @@ Description=SynthGen Flask Web Application
 After=network.target
 
 [Service]
+EnvironmentFile=/etc/syngen/env
 User=www-data
 Group=www-data
-WorkingDirectory=/var/www/Synteticdatagen/web
-Environment="PATH=/var/www/Synteticdatagen/venv/bin:/usr/local/bin:/usr/bin:/bin"
-ExecStart=/var/www/Synteticdatagen/venv/bin/gunicorn --workers 3 --bind 127.0.0.1:5000 'app:create_app()'
+WorkingDirectory=/var/www/syngen/web
+Environment="PATH=/var/www/syngen/venv/bin:/usr/local/bin:/usr/bin:/bin"
+ExecStart=/var/www/syngen/venv/bin/gunicorn --workers 3 --bind 127.0.0.1:5001 'app:create_app()'
 Restart=always
 RestartSec=5
 

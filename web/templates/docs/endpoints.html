@@ -144,11 +144,44 @@
                     <div class="bg-dark text-light p-3 rounded">
 <pre class="mb-0"><code>{
   "success": true,
-  "data": "[{\"id\": 4521, \"email\": \"john@example.com\", \"created_at\": \"2024-03-15\"}, ...]",
-  "rows": 100,
-  "format": "json"
+  "rows_generated": 100,
+  "format": "json",
+  "data": [
+    {"id": 4521, "email": "john@example.com", "created_at": "2024-03-15"},
+    ...
+  ]
 }</code></pre>
                     </div>
+                </div>
+            </div>
+
+            <!-- Preview Endpoint -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <span class="badge bg-light text-success me-2">POST</span>
+                    <code class="text-white">/api/generate/preview</code>
+                </div>
+                <div class="card-body">
+                    <h5>Preview Generation</h5>
+                    <p>Same as <code>/generate</code> but capped at 10 rows and always returns JSON. Requires authentication.</p>
+                </div>
+            </div>
+
+            <!-- Kaggle Endpoints -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <span class="badge bg-dark me-2">POST</span>
+                    <code>/api/kaggle/search</code> · <code>/api/kaggle/schema</code> · <code>/api/kaggle/clone</code>
+                </div>
+                <div class="card-body">
+                    <h5>Kaggle Dataset Integration</h5>
+                    <p>Search public Kaggle datasets, learn their schema, or generate a synthetic clone in one call. All endpoints require API key authentication.</p>
+                    <ul>
+                        <li><code>/kaggle/search</code> — search datasets by keyword</li>
+                        <li><code>/kaggle/schema</code> — infer field types from a dataset sample (no real rows returned)</li>
+                        <li><code>/kaggle/clone</code> — learn schema and generate synthetic data in one step</li>
+                    </ul>
+                    <p class="text-muted small mb-0">Kaggle credentials are sent per-request. In the web UI, you can save them encrypted on your Profile.</p>
                 </div>
             </div>
 
@@ -172,25 +205,23 @@
                 </div>
             </div>
 
-            <!-- Types Endpoint -->
+            <!-- Field Types Endpoint -->
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white">
                     <span class="badge bg-light text-primary me-2">GET</span>
-                    <code class="text-white">/api/types</code>
+                    <code class="text-white">/api/field-types</code>
                 </div>
                 <div class="card-body">
-                    <h5>List Data Types</h5>
-                    <p>Get a list of all supported data types and their constraints. No authentication required.</p>
+                    <h5>List Field Types</h5>
+                    <p>Get all 35+ supported field types and their constraints. No authentication required.</p>
 
                     <h6 class="mt-4">Response</h6>
                     <div class="bg-dark text-light p-3 rounded">
 <pre class="mb-0"><code>{
-  "types": [
-    {"type": "integer", "constraints": ["min", "max"]},
-    {"type": "float", "constraints": ["min", "max", "precision"]},
-    {"type": "string", "constraints": ["min_length", "max_length"]},
-    {"type": "email", "constraints": []},
-    {"type": "name", "constraints": []},
+  "field_types": [
+    {"type": "integer", "description": "Random integer within range", "supported_constraints": ["min", "max"]},
+    {"type": "csat_score", "description": "Customer satisfaction score", "supported_constraints": ["scale", "choices", "weights"]},
+    {"type": "age", "description": "Age in years", "supported_constraints": ["min", "max", "mode"]},
     ...
   ]
 }</code></pre>

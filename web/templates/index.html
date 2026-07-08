@@ -9,8 +9,8 @@
         <div class="row align-items-center">
             <div class="col-lg-6">
                 <h1 class="display-4 fw-bold mb-4">Generate Realistic Synthetic Data in Seconds</h1>
-                <p class="lead mb-4">Create high-quality test data for development, testing, and demos. Support for CSV, JSON, and SQL formats with 15+ data types.</p>
-                <div class="d-flex gap-3">
+                <p class="lead mb-4">Create high-quality test data for development, testing, and demos. 35+ field types including call center metrics and demographics — plus Kaggle dataset cloning.</p>
+                <div class="d-flex gap-3 flex-wrap">
                     {% if current_user.is_authenticated %}
                     <a href="{{ url_for('generator.index') }}" class="btn btn-light btn-lg">
                         <i class="bi bi-lightning-charge-fill me-2"></i>Start Generating
@@ -31,21 +31,23 @@
                         <span class="text-danger me-2">●</span>
                         <span class="text-warning me-2">●</span>
                         <span class="text-success">●</span>
-                        <span class="ms-3 text-muted small">sample_output.json</span>
+                        <span class="ms-3 text-muted small">call_center_metrics.json</span>
                     </div>
                     <div class="card-body">
 <pre class="mb-0 text-light"><code>[
   {
-    "id": 1,
-    "name": "Sarah Johnson",
-    "email": "sarah.j@example.com",
-    "created_at": "2024-03-15"
+    "agent_id": "AGT-1042",
+    "call_duration": 312,
+    "csat_score": 4,
+    "sentiment": "Positive",
+    "call_outcome": "Resolved"
   },
   {
-    "id": 2,
-    "name": "Michael Chen",
-    "email": "m.chen@example.com",
-    "created_at": "2024-03-16"
+    "agent_id": "AGT-0871",
+    "call_duration": 187,
+    "csat_score": 5,
+    "sentiment": "Positive",
+    "call_outcome": "Resolved"
   }
 ]</code></pre>
                     </div>
@@ -60,17 +62,17 @@
     <div class="container py-5">
         <div class="text-center mb-5">
             <h2 class="fw-bold">Why Choose SynGen Pro?</h2>
-            <p class="text-muted">Everything you need to generate professional test data</p>
+            <p class="text-muted">Everything you need to generate professional test data — 100% free</p>
         </div>
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="card h-100 border-0 shadow-sm">
                     <div class="card-body text-center p-4">
                         <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                            <i class="bi bi-lightning-charge text-primary fs-3"></i>
+                            <i class="bi bi-headset text-primary fs-3"></i>
                         </div>
-                        <h5>Lightning Fast</h5>
-                        <p class="text-muted">Generate thousands of records in milliseconds. Our optimized engine handles large datasets with ease.</p>
+                        <h5>Call Center Metrics</h5>
+                        <p class="text-muted">Generate realistic CSAT scores, wait times, agent IDs, sentiment labels, and call outcomes for contact-center testing.</p>
                     </div>
                 </div>
             </div>
@@ -78,10 +80,10 @@
                 <div class="card h-100 border-0 shadow-sm">
                     <div class="card-body text-center p-4">
                         <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                            <i class="bi bi-sliders text-success fs-3"></i>
+                            <i class="bi bi-people text-success fs-3"></i>
                         </div>
-                        <h5>Highly Customizable</h5>
-                        <p class="text-muted">Configure field types, constraints, and formats. Create exactly the data structure you need.</p>
+                        <h5>Demographic Fields</h5>
+                        <p class="text-muted">Age, gender, income brackets, education levels, and more — ideal for survey data and segmentation testing.</p>
                     </div>
                 </div>
             </div>
@@ -89,10 +91,43 @@
                 <div class="card h-100 border-0 shadow-sm">
                     <div class="card-body text-center p-4">
                         <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                            <i class="bi bi-code-slash text-info fs-3"></i>
+                            <i class="bi bi-cloud-download text-info fs-3"></i>
+                        </div>
+                        <h5>Kaggle Dataset Cloning</h5>
+                        <p class="text-muted">Search public Kaggle datasets, learn their schema automatically, and generate synthetic clones. Save credentials encrypted on your profile.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                            <i class="bi bi-lightning-charge text-warning fs-3"></i>
+                        </div>
+                        <h5>Lightning Fast</h5>
+                        <p class="text-muted">Generate up to 100,000 rows per request. Export as CSV, JSON, or SQL INSERT statements.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                            <i class="bi bi-sliders text-danger fs-3"></i>
+                        </div>
+                        <h5>Highly Customizable</h5>
+                        <p class="text-muted">Configure field types, constraints, and weighted distributions. Create exactly the data structure you need.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="bg-secondary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                            <i class="bi bi-code-slash text-secondary fs-3"></i>
                         </div>
                         <h5>Developer Friendly</h5>
-                        <p class="text-muted">REST API with comprehensive documentation. Integrate into your CI/CD pipeline effortlessly.</p>
+                        <p class="text-muted">REST API with Bearer token auth, comprehensive docs, and 1,000 free requests per day.</p>
                     </div>
                 </div>
             </div>
@@ -104,11 +139,13 @@
 <section class="bg-light py-5">
     <div class="container py-5">
         <div class="text-center mb-5">
-            <h2 class="fw-bold">15+ Data Types Supported</h2>
-            <p class="text-muted">Generate realistic data for any use case</p>
+            <h2 class="fw-bold">35+ Field Types Supported</h2>
+            <p class="text-muted">General types plus specialized call center and demographic fields</p>
         </div>
-        <div class="row g-3 justify-content-center">
-            {% set data_types = [
+
+        <h5 class="text-center text-muted mb-3">General</h5>
+        <div class="row g-3 justify-content-center mb-4">
+            {% set general_types = [
                 ('bi-123', 'Integer', 'primary'),
                 ('bi-percent', 'Float', 'primary'),
                 ('bi-fonts', 'String', 'secondary'),
@@ -125,10 +162,34 @@
                 ('bi-toggle-on', 'Boolean', 'danger'),
                 ('bi-fingerprint', 'UUID', 'danger')
             ] %}
-            {% for icon, name, color in data_types %}
+            {% for icon, name, color in general_types %}
             <div class="col-auto">
                 <span class="badge bg-{{ color }} bg-opacity-10 text-{{ color }} px-3 py-2 fs-6">
                     <i class="{{ icon }} me-1"></i>{{ name }}
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <h5 class="text-center text-muted mb-3">Call Center</h5>
+        <div class="row g-3 justify-content-center mb-4">
+            {% set cc_types = ['Call Duration', 'Wait Time', 'CSAT Score', 'NPS Score', 'Sentiment', 'Agent ID', 'Call Outcome', 'Resolution Status'] %}
+            {% for name in cc_types %}
+            <div class="col-auto">
+                <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 fs-6">
+                    <i class="bi bi-headset me-1"></i>{{ name }}
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <h5 class="text-center text-muted mb-3">Demographics</h5>
+        <div class="row g-3 justify-content-center">
+            {% set demo_types = ['Age', 'Gender', 'Ethnicity', 'Education', 'Income Bracket', 'Employment', 'Household Size', 'Generation'] %}
+            {% for name in demo_types %}
+            <div class="col-auto">
+                <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 fs-6">
+                    <i class="bi bi-person-vcard me-1"></i>{{ name }}
                 </span>
             </div>
             {% endfor %}
@@ -150,9 +211,9 @@
                         <i class="bi bi-filetype-csv me-2"></i>CSV
                     </div>
                     <div class="card-body">
-<pre class="bg-light p-3 rounded small mb-0"><code>id,name,email
-1,John Doe,john@example.com
-2,Jane Smith,jane@example.com</code></pre>
+<pre class="bg-light p-3 rounded small mb-0"><code>agent_id,csat_score,sentiment
+AGT-1042,4,Positive
+AGT-0871,5,Positive</code></pre>
                     </div>
                 </div>
             </div>
@@ -163,8 +224,8 @@
                     </div>
                     <div class="card-body">
 <pre class="bg-light p-3 rounded small mb-0"><code>[
-  {"id": 1, "name": "John"},
-  {"id": 2, "name": "Jane"}
+  {"agent_id": "AGT-1042", "csat_score": 4},
+  {"agent_id": "AGT-0871", "csat_score": 5}
 ]</code></pre>
                     </div>
                 </div>
@@ -175,10 +236,10 @@
                         <i class="bi bi-filetype-sql me-2"></i>SQL
                     </div>
                     <div class="card-body">
-<pre class="bg-light p-3 rounded small mb-0"><code>INSERT INTO users
-(id, name) VALUES
-(1, 'John Doe');
-(2, 'Jane Smith');</code></pre>
+<pre class="bg-light p-3 rounded small mb-0"><code>INSERT INTO calls
+(agent_id, csat_score) VALUES
+('AGT-1042', 4);
+('AGT-0871', 5);</code></pre>
                     </div>
                 </div>
             </div>
@@ -190,7 +251,7 @@
 <section class="bg-primary text-white py-5">
     <div class="container py-5 text-center">
         <h2 class="fw-bold mb-4">Ready to Generate Your Data?</h2>
-        <p class="lead mb-4">Start with 100 free requests per day. No credit card required.</p>
+        <p class="lead mb-4">1,000 free requests per day. Up to 100,000 rows per request. No credit card required.</p>
         {% if current_user.is_authenticated %}
         <a href="{{ url_for('generator.index') }}" class="btn btn-light btn-lg">
             <i class="bi bi-lightning-charge-fill me-2"></i>Go to Generator

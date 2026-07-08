@@ -3,11 +3,12 @@ Description=SynthGen FastAPI Application
 After=network.target
 
 [Service]
+EnvironmentFile=/etc/syngen/env
 User=www-data
 Group=www-data
-WorkingDirectory=/var/www/Synteticdatagen
-Environment="PATH=/var/www/Synteticdatagen/venv/bin:/usr/local/bin:/usr/bin:/bin"
-ExecStart=/var/www/Synteticdatagen/venv/bin/uvicorn api.app:app --host 127.0.0.1 --port 8000
+WorkingDirectory=/var/www/syngen
+Environment="PATH=/var/www/syngen/venv/bin:/usr/local/bin:/usr/bin:/bin"
+ExecStart=/var/www/syngen/venv/bin/uvicorn api.app:app --host 127.0.0.1 --port 8000
 Restart=always
 RestartSec=5
 
