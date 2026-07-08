@@ -20,7 +20,16 @@ class FieldSchema:
         valid_types = [
             'integer', 'float', 'string', 'email', 'phone',
             'date', 'datetime', 'boolean', 'uuid', 'name',
-            'address', 'city', 'country', 'company', 'url'
+            'address', 'city', 'country', 'company', 'url', 'category',
+            # Call center metrics
+            'call_duration', 'wait_time', 'hold_time', 'call_type',
+            'call_channel', 'call_department', 'agent_id', 'call_priority',
+            'call_outcome', 'resolution_status', 'sentiment', 'csat_score',
+            'nps_score',
+            # Demographics
+            'age', 'gender', 'ethnicity', 'marital_status', 'education_level',
+            'employment_status', 'income_bracket', 'household_size',
+            'language_preference', 'generation',
         ]
 
         if self.field_type not in valid_types:

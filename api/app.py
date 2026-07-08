@@ -10,10 +10,14 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from core import SyntheticDataEngine, FieldSchema
+from core.kaggle_client import KaggleClient, KaggleError
+from core.schema_learner import infer_schema
 from formatters import CSVFormatter, JSONFormatter, SQLFormatter
 from api.models import (
     GenerateRequest, GenerateResponse, FieldTypesResponse,
-    FieldTypeInfo, ErrorResponse
+    FieldTypeInfo, ErrorResponse, FieldConfig,
+    KaggleSearchRequest, KaggleSearchResponse, KaggleDatasetInfo,
+    KaggleCloneRequest, KaggleSchemaResponse,
 )
 
 app = FastAPI(
@@ -121,6 +125,128 @@ async def get_field_types():
             description="Random URL",
             supported_constraints=[]
         ),
+        FieldTypeInfo(
+            type="category",
+            description="Random value sampled from a custom list, optionally weighted",
+            supported_constraints=["choices", "weights"]
+        ),
+        # Call center metrics
+        FieldTypeInfo(
+            type="call_duration",
+            description="Call handle time in seconds (right-skewed distribution)",
+            supported_constraints=["min", "max", "mean"]
+        ),
+        FieldTypeInfo(
+            type="wait_time",
+            description="Time in queue before being answered, in seconds",
+            supported_constraints=["min", "max", "mean"]
+        ),
+        FieldTypeInfo(
+            type="hold_time",
+            description="Time on hold during the call, in seconds",
+            supported_constraints=["min", "max", "mean"]
+        ),
+        FieldTypeInfo(
+            type="call_type",
+            description="Call direction (Inbound/Outbound)",
+            supported_constraints=["choices", "weights"]
+        ),
+        FieldTypeInfo(
+            type="call_channel",
+            description="Contact channel (Phone/Chat/Email/Social Media)",
+            supported_constraints=["choices", "weights"]
+        ),
+        FieldTypeInfo(
+            type="call_department",
+            description="Queue/department that handled the call",
+            supported_constraints=["choices", "weights"]
+        ),
+        FieldTypeInfo(
+            type="agent_id",
+            description="Agent identifier drawn from a bounded roster",
+            supported_constraints=["prefix", "num_agents"]
+        ),
+        FieldTypeInfo(
+            type="call_priority",
+            description="Priority/severity of the call or ticket",
+            supported_constraints=["choices", "weights"]
+        ),
+        FieldTypeInfo(
+            type="call_outcome",
+            description="How the call ended (Resolved, Escalated, Abandoned, ...)",
+            supported_constraints=["choices", "weights"]
+        ),
+        FieldTypeInfo(
+            type="resolution_status",
+            description="Resolution state of the underlying issue",
+            supported_constraints=["choices", "weights"]
+        ),
+        FieldTypeInfo(
+            type="sentiment",
+            description="Sentiment label (Positive/Neutral/Negative)",
+            supported_constraints=["choices", "weights"]
+        ),
+        FieldTypeInfo(
+            type="csat_score",
+            description="Customer satisfaction score, skewed toward satisfied",
+            supported_constraints=["scale", "choices", "weights"]
+        ),
+        FieldTypeInfo(
+            type="nps_score",
+            description="Net Promoter Score response (0-10), skewed toward promoters",
+            supported_constraints=["choices", "weights"]
+        ),
+        # Demographics
+        FieldTypeInfo(
+            type="age",
+            description="Age in years, skewed toward working-age adults",
+            supported_constraints=["min", "max", "mode"]
+        ),
+        FieldTypeInfo(
+            type="gender",
+            description="Gender identity",
+            supported_constraints=["choices", "weights"]
+        ),
+        FieldTypeInfo(
+            type="ethnicity",
+            description="Race/ethnicity category (US Census-style buckets)",
+            supported_constraints=["choices", "weights"]
+        ),
+        FieldTypeInfo(
+            type="marital_status",
+            description="Marital status",
+            supported_constraints=["choices", "weights"]
+        ),
+        FieldTypeInfo(
+            type="education_level",
+            description="Highest level of education attained",
+            supported_constraints=["choices", "weights"]
+        ),
+        FieldTypeInfo(
+            type="employment_status",
+            description="Employment status",
+            supported_constraints=["choices", "weights"]
+        ),
+        FieldTypeInfo(
+            type="income_bracket",
+            description="Household income bracket label",
+            supported_constraints=["choices", "weights"]
+        ),
+        FieldTypeInfo(
+            type="household_size",
+            description="Number of people in the household",
+            supported_constraints=["min", "max", "choices", "weights"]
+        ),
+        FieldTypeInfo(
+            type="language_preference",
+            description="Preferred language",
+            supported_constraints=["choices", "weights"]
+        ),
+        FieldTypeInfo(
+            type="generation",
+            description="Generational cohort label (Gen Z, Millennial, ...)",
+            supported_constraints=["choices", "weights"]
+        ),
     ]
 
     return FieldTypesResponse(field_types=field_types)
@@ -219,6 +345,118 @@ async def generate_preview(request: GenerateRequest):
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal error: {str(e)}")
+
+
+@app.post("/kaggle/search", response_model=KaggleSearchResponse, tags=["Kaggle"])
+async def kaggle_search(request: KaggleSearchRequest):
+    """
+    Search public Kaggle datasets by keyword.
+
+    Credentials (your Kaggle username + API key from kaggle.com/settings)
+    are used only for this request and are never stored server-side.
+    """
+    try:
+        client = KaggleClient(request.kaggle_username, request.kaggle_key)
+        results = client.search_datasets(request.query)
+        datasets = [
+            KaggleDatasetInfo(
+                ref=item.get("ref", ""),
+                title=item.get("title", item.get("ref", "")),
+                subtitle=item.get("subtitle"),
+                size=str(item.get("size")) if item.get("size") is not None else None,
+                last_updated=item.get("lastUpdated"),
+            )
+            for item in results
+        ]
+        return KaggleSearchResponse(datasets=datasets)
+    except KaggleError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Kaggle request failed: {str(e)}")
+
+
+@app.post("/kaggle/schema", response_model=KaggleSchemaResponse, tags=["Kaggle"])
+async def kaggle_schema(request: KaggleCloneRequest):
+    """
+    Learn a synthetic-data field schema from a Kaggle dataset.
+
+    Downloads a sample of the dataset's first CSV file, infers a field type
+    and realistic constraints per column, and returns that schema only -
+    no real rows are ever returned. Reuse the schema with `/generate` or
+    `/kaggle/clone` to produce synthetic data shaped like the source.
+    """
+    try:
+        owner, _, dataset = request.dataset_ref.partition("/")
+        if not owner or not dataset:
+            raise HTTPException(status_code=400, detail="dataset_ref must be in 'owner/dataset-slug' format")
+
+        client = KaggleClient(request.kaggle_username, request.kaggle_key)
+        rows = client.fetch_dataset_rows(owner, dataset, max_rows=request.sample_rows)
+        fields = infer_schema(rows)
+
+        return KaggleSchemaResponse(
+            dataset_ref=request.dataset_ref,
+            fields=[FieldConfig(name=f.name, type=f.field_type, constraints=f.constraints) for f in fields],
+            rows_sampled=len(rows),
+        )
+    except KaggleError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Kaggle request failed: {str(e)}")
+
+
+@app.post("/kaggle/clone", response_model=None, tags=["Kaggle"])
+async def kaggle_clone(request: KaggleCloneRequest):
+    """
+    Learn a Kaggle dataset's schema and generate a fresh synthetic clone of it.
+
+    This is `/kaggle/schema` followed by `/generate` in one call: the source
+    data is used only to infer column types and distributions, then discarded.
+    """
+    try:
+        owner, _, dataset = request.dataset_ref.partition("/")
+        if not owner or not dataset:
+            raise HTTPException(status_code=400, detail="dataset_ref must be in 'owner/dataset-slug' format")
+
+        client = KaggleClient(request.kaggle_username, request.kaggle_key)
+        source_rows = client.fetch_dataset_rows(owner, dataset, max_rows=request.sample_rows)
+        fields = infer_schema(source_rows)
+        if not fields:
+            raise HTTPException(status_code=400, detail="Could not infer any fields from this dataset")
+
+        engine = SyntheticDataEngine(fields)
+        data = engine.generate(request.rows)
+
+        if request.format == "csv":
+            return PlainTextResponse(
+                content=CSVFormatter.format(data),
+                media_type="text/csv",
+                headers={"Content-Disposition": "attachment; filename=synthetic_clone.csv"},
+            )
+        elif request.format == "sql":
+            return PlainTextResponse(
+                content=SQLFormatter.format(data, request.table_name),
+                media_type="text/plain",
+                headers={"Content-Disposition": f"attachment; filename={request.table_name}.sql"},
+            )
+        return JSONResponse(content={
+            "success": True,
+            "dataset_ref": request.dataset_ref,
+            "rows_generated": len(data),
+            "format": "json",
+            "fields": [f.to_dict() for f in fields],
+            "data": data,
+        })
+    except KaggleError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except HTTPException:
+        raise
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Kaggle request failed: {str(e)}")
 
 
 if __name__ == "__main__":

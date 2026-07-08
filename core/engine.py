@@ -6,7 +6,15 @@ from .generators import (
     IntegerGenerator, FloatGenerator, StringGenerator, EmailGenerator,
     PhoneGenerator, DateGenerator, DateTimeGenerator, BooleanGenerator,
     UUIDGenerator, NameGenerator, AddressGenerator, CityGenerator,
-    CountryGenerator, CompanyGenerator, URLGenerator
+    CountryGenerator, CompanyGenerator, URLGenerator, CategoryGenerator,
+    CallDurationGenerator, WaitTimeGenerator, HoldTimeGenerator,
+    CallTypeGenerator, CallChannelGenerator, CallDepartmentGenerator,
+    AgentIdGenerator, CallPriorityGenerator, CallOutcomeGenerator,
+    ResolutionStatusGenerator, SentimentGenerator, CSATScoreGenerator,
+    NPSScoreGenerator, AgeGenerator, GenderGenerator, EthnicityGenerator,
+    MaritalStatusGenerator, EducationLevelGenerator, EmploymentStatusGenerator,
+    IncomeBracketGenerator, HouseholdSizeGenerator, LanguagePreferenceGenerator,
+    GenerationGenerator,
 )
 
 
@@ -29,6 +37,32 @@ class SyntheticDataEngine:
         'country': CountryGenerator,
         'company': CompanyGenerator,
         'url': URLGenerator,
+        'category': CategoryGenerator,
+        # Call center metrics
+        'call_duration': CallDurationGenerator,
+        'wait_time': WaitTimeGenerator,
+        'hold_time': HoldTimeGenerator,
+        'call_type': CallTypeGenerator,
+        'call_channel': CallChannelGenerator,
+        'call_department': CallDepartmentGenerator,
+        'agent_id': AgentIdGenerator,
+        'call_priority': CallPriorityGenerator,
+        'call_outcome': CallOutcomeGenerator,
+        'resolution_status': ResolutionStatusGenerator,
+        'sentiment': SentimentGenerator,
+        'csat_score': CSATScoreGenerator,
+        'nps_score': NPSScoreGenerator,
+        # Demographics
+        'age': AgeGenerator,
+        'gender': GenderGenerator,
+        'ethnicity': EthnicityGenerator,
+        'marital_status': MaritalStatusGenerator,
+        'education_level': EducationLevelGenerator,
+        'employment_status': EmploymentStatusGenerator,
+        'income_bracket': IncomeBracketGenerator,
+        'household_size': HouseholdSizeGenerator,
+        'language_preference': LanguagePreferenceGenerator,
+        'generation': GenerationGenerator,
     }
 
     def __init__(self, fields: List[FieldSchema]):

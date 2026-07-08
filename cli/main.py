@@ -71,6 +71,30 @@ def get_field_constraints(field_type: str) -> dict:
         if prob:
             constraints['true_probability'] = float(prob)
 
+    elif field_type == 'age':
+        min_val = input("  Min age (default 18): ").strip()
+        max_val = input("  Max age (default 90): ").strip()
+        if min_val:
+            constraints['min'] = int(min_val)
+        if max_val:
+            constraints['max'] = int(max_val)
+
+    elif field_type in ('call_duration', 'wait_time', 'hold_time'):
+        min_val = input("  Min seconds (optional): ").strip()
+        max_val = input("  Max seconds (optional): ").strip()
+        mean = input("  Typical/mean seconds (optional): ").strip()
+        if min_val:
+            constraints['min'] = int(min_val)
+        if max_val:
+            constraints['max'] = int(max_val)
+        if mean:
+            constraints['mean'] = float(mean)
+
+    elif field_type == 'agent_id':
+        num_agents = input("  Number of distinct agents (default 50): ").strip()
+        if num_agents:
+            constraints['num_agents'] = int(num_agents)
+
     return constraints
 
 
@@ -78,7 +102,13 @@ def interactive_field_setup() -> list:
     """Interactively configure fields."""
     print("\nSupported field types:")
     print("  integer, float, string, email, phone, date, datetime, boolean")
-    print("  uuid, name, address, city, country, company, url")
+    print("  uuid, name, address, city, country, company, url, category")
+    print("  Call center: call_duration, wait_time, hold_time, call_type, call_channel,")
+    print("               call_department, agent_id, call_priority, call_outcome,")
+    print("               resolution_status, sentiment, csat_score, nps_score")
+    print("  Demographics: age, gender, ethnicity, marital_status, education_level,")
+    print("                employment_status, income_bracket, household_size,")
+    print("                language_preference, generation")
     print()
 
     num_fields = 0
@@ -103,7 +133,13 @@ def interactive_field_setup() -> list:
         valid_types = [
             'integer', 'float', 'string', 'email', 'phone',
             'date', 'datetime', 'boolean', 'uuid', 'name',
-            'address', 'city', 'country', 'company', 'url'
+            'address', 'city', 'country', 'company', 'url', 'category',
+            'call_duration', 'wait_time', 'hold_time', 'call_type',
+            'call_channel', 'call_department', 'agent_id', 'call_priority',
+            'call_outcome', 'resolution_status', 'sentiment', 'csat_score',
+            'nps_score', 'age', 'gender', 'ethnicity', 'marital_status',
+            'education_level', 'employment_status', 'income_bracket',
+            'household_size', 'language_preference', 'generation',
         ]
 
         while field_type not in valid_types:

@@ -89,6 +89,55 @@
                 </div>
             </div>
 
+            <!-- Kaggle Integration -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-cloud-download me-2"></i>Kaggle Integration</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small">
+                        Save your Kaggle credentials to clone dataset schemas from the Generator page
+                        without re-entering them each time. Get a key from
+                        <a href="https://www.kaggle.com/settings" target="_blank" rel="noopener">kaggle.com/settings</a>
+                        ("Create New Token"). Your key is encrypted before being stored.
+                    </p>
+
+                    {% if current_user.has_kaggle_credentials() %}
+                    <div class="alert alert-success py-2 px-3 d-flex justify-content-between align-items-center mb-3">
+                        <span><i class="bi bi-check-circle me-1"></i>Connected as <strong>{{ current_user.kaggle_username }}</strong></span>
+                    </div>
+                    <form method="POST" action="{{ url_for('auth.remove_kaggle_credentials') }}" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-outline-danger btn-sm"
+                                onclick="return confirm('Remove your saved Kaggle credentials?')">
+                            <i class="bi bi-x-circle me-1"></i>Remove Credentials
+                        </button>
+                    </form>
+                    <a class="btn btn-outline-secondary btn-sm" data-bs-toggle="collapse" href="#kaggleCredForm" role="button">
+                        Update Credentials
+                    </a>
+                    <div class="collapse mt-3" id="kaggleCredForm">
+                    {% else %}
+                    <div>
+                    {% endif %}
+                        <form method="POST" action="{{ url_for('auth.save_kaggle_credentials') }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <input type="text" class="form-control form-control-sm" name="kaggle_username" placeholder="Kaggle username" required>
+                                </div>
+                                <div class="col-6">
+                                    <input type="password" class="form-control form-control-sm" name="kaggle_key" placeholder="Kaggle API key" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm mt-2">
+                                <i class="bi bi-save me-1"></i>Save Credentials
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <!-- Account Info -->
             <div class="card shadow-sm">
                 <div class="card-header">
