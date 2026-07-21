@@ -37,6 +37,9 @@ env/
 *.csv
 *.json
 *.sql
+!vercel.json
+!package.json
+!tsconfig.json
 
 # OS
 .DS_Store

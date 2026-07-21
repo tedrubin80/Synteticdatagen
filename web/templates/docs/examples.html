@@ -3,46 +3,33 @@
 {% block title %}Examples - API Docs{% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container section-tight">
     <div class="row">
         <!-- Sidebar -->
         <div class="col-lg-3 mb-4">
-            <div class="card shadow-sm sticky-top" style="top: 80px;">
-                <div class="card-body">
-                    <h6 class="text-muted mb-3">DOCUMENTATION</h6>
-                    <nav class="nav flex-column">
-                        <a class="nav-link" href="{{ url_for('api_docs.index') }}">
-                            <i class="bi bi-house me-2"></i>Overview
-                        </a>
-                        <a class="nav-link" href="{{ url_for('api_docs.authentication') }}">
-                            <i class="bi bi-key me-2"></i>Authentication
-                        </a>
-                        <a class="nav-link" href="{{ url_for('api_docs.endpoints') }}">
-                            <i class="bi bi-diagram-3 me-2"></i>Endpoints
-                        </a>
-                        <a class="nav-link active" href="{{ url_for('api_docs.examples') }}">
-                            <i class="bi bi-code-slash me-2"></i>Examples
-                        </a>
-                    </nav>
-                </div>
+            <div class="docs-sidebar sticky-top" style="top: 80px;">
+                <div class="tag-group-label mb-2">Documentation</div>
+                <nav class="docs-nav">
+                    <a href="{{ url_for('api_docs.index') }}">Overview</a>
+                    <a href="{{ url_for('api_docs.authentication') }}">Authentication</a>
+                    <a href="{{ url_for('api_docs.endpoints') }}">Endpoints</a>
+                    <a class="active" href="{{ url_for('api_docs.examples') }}">Examples</a>
+                </nav>
             </div>
         </div>
 
         <!-- Main Content -->
         <div class="col-lg-9">
-            <h1 class="mb-4">Code Examples</h1>
+            <h1 class="h3 mb-4">Code examples</h1>
 
             <!-- Python Example -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header">
-                    <i class="bi bi-filetype-py me-2"></i>Python
-                </div>
-                <div class="card-body">
-                    <div class="bg-dark text-light p-3 rounded">
-<pre class="mb-0"><code>import requests
+            <div class="mb-5">
+                <h2 class="docs-h">Python</h2>
+                <div class="term">
+                    <div class="term-body"><span class="key">import</span> requests
 
 API_KEY = "your_api_key_here"
-API_URL = "https://your-domain.com/api/generate"
+API_URL = "http://localhost:8000/generate"
 
 def generate_user_data(count=100):
     headers = {
@@ -73,20 +60,16 @@ def generate_user_data(count=100):
 
 # Generate 100 users
 users = generate_user_data(100)
-print(users)</code></pre>
-                    </div>
+print(users)</div>
                 </div>
             </div>
 
             <!-- JavaScript Example -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header">
-                    <i class="bi bi-filetype-js me-2"></i>JavaScript / Node.js
-                </div>
-                <div class="card-body">
-                    <div class="bg-dark text-light p-3 rounded">
-<pre class="mb-0"><code>const API_KEY = 'your_api_key_here';
-const API_URL = 'https://your-domain.com/api/generate';
+            <div class="mb-5">
+                <h2 class="docs-h">JavaScript / Node.js</h2>
+                <div class="term">
+                    <div class="term-body">const API_KEY = 'your_api_key_here';
+const API_URL = 'http://localhost:8000/generate';
 
 async function generateProductData(count = 50) {
   const response = await fetch(API_URL, {
@@ -115,20 +98,16 @@ async function generateProductData(count = 50) {
 // Generate 50 products
 generateProductData(50).then(products => {
   console.log(products);
-});</code></pre>
-                    </div>
+});</div>
                 </div>
             </div>
 
             <!-- cURL Example -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header">
-                    <i class="bi bi-terminal me-2"></i>cURL
-                </div>
-                <div class="card-body">
-                    <div class="bg-dark text-light p-3 rounded">
-<pre class="mb-0"><code># Generate customer data as CSV
-curl -X POST https://your-domain.com/api/generate \
+            <div class="mb-5">
+                <h2 class="docs-h">cURL</h2>
+                <div class="term">
+                    <div class="term-body"># Generate customer data as CSV
+curl -X POST http://localhost:8000/generate \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -143,19 +122,15 @@ curl -X POST https://your-domain.com/api/generate \
       {"name": "city", "type": "city"},
       {"name": "country", "type": "country"}
     ]
-  }' | jq -r '.data' > customers.csv</code></pre>
-                    </div>
+  }' | jq -r '.data' > customers.csv</div>
                 </div>
             </div>
 
             <!-- Call Center Example -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header">
-                    <i class="bi bi-headset me-2"></i>Call Center Metrics
-                </div>
-                <div class="card-body">
-                    <div class="bg-dark text-light p-3 rounded">
-<pre class="mb-0"><code>curl -X POST https://synthgenapp.dev/api/generate \
+            <div class="mb-5">
+                <h2 class="docs-h">Call Center Metrics</h2>
+                <div class="term">
+                    <div class="term-body">curl -X POST http://localhost:8000/generate \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -169,20 +144,16 @@ curl -X POST https://your-domain.com/api/generate \
       {"name": "sentiment", "type": "sentiment"},
       {"name": "call_outcome", "type": "call_outcome"}
     ]
-  }'</code></pre>
-                    </div>
+  }'</div>
                 </div>
             </div>
 
             <!-- SQL Example -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header">
-                    <i class="bi bi-database me-2"></i>Generate SQL INSERT Statements
-                </div>
-                <div class="card-body">
-                    <div class="bg-dark text-light p-3 rounded">
-<pre class="mb-0"><code># Generate SQL INSERT statements for seeding a database
-curl -X POST https://your-domain.com/api/generate \
+            <div class="mb-5">
+                <h2 class="docs-h">Generate SQL INSERT Statements</h2>
+                <div class="term">
+                    <div class="term-body"># Generate SQL INSERT statements for seeding a database
+curl -X POST http://localhost:8000/generate \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -201,42 +172,37 @@ curl -X POST https://your-domain.com/api/generate \
 
 # Output example:
 # INSERT INTO employees (id, name, email, department, hire_date, is_manager)
-# VALUES (423, 'John Smith', 'john.smith@example.com', 'Acme Corp', '2023-05-15', TRUE);</code></pre>
-                    </div>
+# VALUES (423, 'John Smith', 'john.smith@example.com', 'Acme Corp', '2023-05-15', TRUE);</div>
                 </div>
             </div>
 
             <!-- Use Cases -->
-            <div class="card shadow-sm">
-                <div class="card-header">
-                    <i class="bi bi-lightbulb me-2"></i>Common Use Cases
-                </div>
-                <div class="card-body">
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <h6><i class="bi bi-bug text-warning me-2"></i>Testing & QA</h6>
-                            <p class="small text-muted">Generate diverse test data to ensure your application handles various scenarios correctly.</p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6><i class="bi bi-database-add text-primary me-2"></i>Database Seeding</h6>
-                            <p class="small text-muted">Populate development databases with realistic data for local testing.</p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6><i class="bi bi-easel text-success me-2"></i>Demos & Prototypes</h6>
-                            <p class="small text-muted">Create convincing demo data for presentations and client showcases.</p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6><i class="bi bi-shield-check text-info me-2"></i>Privacy Compliance</h6>
-                            <p class="small text-muted">Replace sensitive production data with synthetic alternatives for safe analysis.</p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6><i class="bi bi-headset text-danger me-2"></i>Contact Center QA</h6>
-                            <p class="small text-muted">Generate CSAT scores, wait times, and agent metrics for dashboard and analytics testing.</p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6><i class="bi bi-people text-secondary me-2"></i>Demographic Surveys</h6>
-                            <p class="small text-muted">Create realistic age, income, and education distributions for segmentation and survey prototypes.</p>
-                        </div>
+            <div>
+                <h2 class="docs-h">Common use cases</h2>
+                <div class="feature-list">
+                    <div class="feature">
+                        <h3>Testing &amp; QA</h3>
+                        <p>Generate diverse test data to ensure your application handles various scenarios correctly.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Database seeding</h3>
+                        <p>Populate development databases with realistic data for local testing.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Demos &amp; prototypes</h3>
+                        <p>Create convincing demo data for presentations and client showcases.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Privacy compliance</h3>
+                        <p>Replace sensitive production data with synthetic alternatives for safe analysis.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Contact center QA</h3>
+                        <p>Generate CSAT scores, wait times, and agent metrics for dashboard and analytics testing.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Demographic surveys</h3>
+                        <p>Create realistic age, income, and education distributions for segmentation and survey prototypes.</p>
                     </div>
                 </div>
             </div>

@@ -45,11 +45,12 @@ echo -e "${GREEN}[OK]${NC} NGINX configured"
 
 echo -e "${YELLOW}Step 4: Starting application services${NC}"
 systemctl enable synthgen-web
-systemctl enable synthgen-api
 systemctl start synthgen-web
-systemctl start synthgen-api
+# Public FastAPI proxy is disabled (see nginx /api/ → 410). Keep API off by default.
+systemctl disable synthgen-api 2>/dev/null || true
+systemctl stop synthgen-api 2>/dev/null || true
 
-echo -e "${GREEN}[OK]${NC} Services started"
+echo -e "${GREEN}[OK]${NC} Web service started (API service left disabled)"
 
 echo ""
 echo "=========================================="
@@ -69,10 +70,13 @@ echo "3. After certbot completes, copy the full HTTPS config:"
 echo "   sudo cp /var/www/Synteticdatagen/nginx/synthgenapp.dev.conf /etc/nginx/sites-available/synthgenapp.dev"
 echo "   sudo nginx -t && sudo systemctl reload nginx"
 echo ""
-echo "4. Verify services are running:"
+echo "4. Verify the web service is running:"
 echo "   sudo systemctl status synthgen-web"
-echo "   sudo systemctl status synthgen-api"
 echo ""
 echo "5. Test your site:"
 echo "   curl -I https://synthgenapp.dev"
+echo "   # Public API should return 410 Gone:"
+echo "   curl -i https://synthgenapp.dev/api/health"
+echo ""
+echo "Prefer Railway or Vercel? See README.md — deploy from GitHub to either platform."
 echo ""

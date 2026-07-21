@@ -3,57 +3,38 @@
 {% block title %}API Documentation{% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container section-tight">
     <div class="row">
         <!-- Sidebar -->
         <div class="col-lg-3 mb-4">
-            <div class="card shadow-sm sticky-top" style="top: 80px;">
-                <div class="card-body">
-                    <h6 class="text-muted mb-3">DOCUMENTATION</h6>
-                    <nav class="nav flex-column">
-                        <a class="nav-link active" href="{{ url_for('api_docs.index') }}">
-                            <i class="bi bi-house me-2"></i>Overview
-                        </a>
-                        <a class="nav-link" href="{{ url_for('api_docs.authentication') }}">
-                            <i class="bi bi-key me-2"></i>Authentication
-                        </a>
-                        <a class="nav-link" href="{{ url_for('api_docs.endpoints') }}">
-                            <i class="bi bi-diagram-3 me-2"></i>Endpoints
-                        </a>
-                        <a class="nav-link" href="{{ url_for('api_docs.examples') }}">
-                            <i class="bi bi-code-slash me-2"></i>Examples
-                        </a>
-                    </nav>
-                </div>
+            <div class="docs-sidebar sticky-top" style="top: 80px;">
+                <div class="tag-group-label mb-2">Documentation</div>
+                <nav class="docs-nav">
+                    <a class="active" href="{{ url_for('api_docs.index') }}">Overview</a>
+                    <a href="{{ url_for('api_docs.authentication') }}">Authentication</a>
+                    <a href="{{ url_for('api_docs.endpoints') }}">Endpoints</a>
+                    <a href="{{ url_for('api_docs.examples') }}">Examples</a>
+                </nav>
             </div>
         </div>
 
         <!-- Main Content -->
         <div class="col-lg-9">
-            <h1 class="mb-4">API Documentation</h1>
+            <h1 class="h3 mb-4">API documentation</h1>
 
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <h5>Introduction</h5>
-                    <p>The SynGen Pro API allows you to programmatically generate synthetic data for your applications. Use it to create test data, seed databases, or generate sample datasets.</p>
-
-                    <div class="alert alert-info">
-                        <i class="bi bi-info-circle me-2"></i>
-                        <strong>Base URL:</strong> <code>https://synthgenapp.dev/api</code>
-                    </div>
-                </div>
+            <div class="mb-5">
+                <h2 class="docs-h">Introduction</h2>
+                <p class="text-muted">The SynGen API lets you generate synthetic data programmatically — to create test data, seed databases, or produce sample datasets from any language.</p>
+                <p><span class="tag">Base URL</span> <code>http://localhost:8000</code> <span class="text-muted small">(self-hosted FastAPI — no public hosted API)</span></p>
             </div>
 
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <h5>Quick Start</h5>
-                    <p>Here's a simple example to get you started:</p>
-
-                    <div class="bg-dark text-light p-3 rounded">
-<pre class="mb-0"><code>curl -X POST https://synthgenapp.dev/api/generate \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
+            <div class="mb-5">
+                <h2 class="docs-h">Quick start</h2>
+                <div class="term">
+                    <div class="term-body"><span class="prompt">$</span> curl -X POST http://localhost:8000/generate \
+  -H <span class="str">"Authorization: Bearer YOUR_API_KEY"</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{
     "rows": 10,
     "format": "json",
     "fields": [
@@ -61,17 +42,15 @@
       {"name": "email", "type": "email"},
       {"name": "name", "type": "name"}
     ]
-  }'</code></pre>
-                    </div>
+  }'</span></div>
                 </div>
             </div>
 
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <h5>Supported Data Types</h5>
+            <div class="mb-5">
+                <h2 class="docs-h">Supported data types</h2>
                     <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead class="table-light">
+                        <table class="endpoint-table">
+                            <thead>
                                 <tr>
                                     <th>Type</th>
                                     <th>Description</th>
@@ -165,8 +144,8 @@
 
                     <h6 class="mt-4">Call Center Types</h6>
                     <div class="table-responsive">
-                        <table class="table table-bordered table-sm">
-                            <thead class="table-light">
+                        <table class="endpoint-table">
+                            <thead>
                                 <tr><th>Type</th><th>Description</th><th>Constraints</th></tr>
                             </thead>
                             <tbody>
@@ -182,8 +161,8 @@
 
                     <h6 class="mt-4">Demographic Types</h6>
                     <div class="table-responsive">
-                        <table class="table table-bordered table-sm">
-                            <thead class="table-light">
+                        <table class="endpoint-table">
+                            <thead>
                                 <tr><th>Type</th><th>Description</th><th>Constraints</th></tr>
                             </thead>
                             <tbody>
@@ -195,32 +174,12 @@
                             </tbody>
                         </table>
                     </div>
-                    <p class="text-muted small">See <code>GET /api/field-types</code> for the complete list of 35+ types.</p>
-                </div>
+                <p class="text-muted small">See <code>GET /field-types</code> for the complete list of 35+ types.</p>
             </div>
 
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5>Rate Limits</h5>
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Plan</th>
-                                    <th>Requests/Day</th>
-                                    <th>Max Rows/Request</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><span class="badge bg-success">Free</span></td>
-                                    <td>1,000</td>
-                                    <td>100,000</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <div class="mb-5">
+                <h2 class="docs-h">Rate limits</h2>
+                <p class="text-muted">When you self-host, configure limits via env vars (or leave them open). There is no public hosted API to call — run <code>uvicorn api.app:app</code> locally or deploy your own instance on Railway or Vercel.</p>
             </div>
         </div>
     </div>

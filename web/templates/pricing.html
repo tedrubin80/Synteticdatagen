@@ -4,275 +4,104 @@
 
 {% block content %}
 <!-- Hero -->
-<section class="bg-primary text-white py-5">
-    <div class="container text-center py-4">
-        <h1 class="fw-bold">100% Free. No Strings Attached.</h1>
-        <p class="lead mb-0">Generate synthetic data at no cost — 1,000 requests/day, 100,000 rows per request</p>
-    </div>
-</section>
-
-<!-- Free Service Info -->
-<section class="py-5">
+<section class="hero section-tight">
     <div class="container">
-        <div class="row justify-content-center">
+        <div class="row">
             <div class="col-lg-8">
-                <div class="card shadow border-success">
-                    <div class="card-header bg-success text-white text-center py-3">
-                        <h4 class="mb-0"><i class="bi bi-gift me-2"></i>Free Forever</h4>
-                    </div>
-                    <div class="card-body p-5">
-                        <div class="text-center mb-4">
-                            <span class="display-1 fw-bold text-success">$0</span>
-                            <p class="text-muted">No credit card required. No hidden fees. Ever.</p>
-                        </div>
-
-                        <div class="row g-4">
-                            <div class="col-md-6">
-                                <ul class="list-unstyled">
-                                    <li class="mb-3">
-                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                        <strong>1,000</strong> requests per day
-                                    </li>
-                                    <li class="mb-3">
-                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                        Up to <strong>100,000</strong> rows per request
-                                    </li>
-                                    <li class="mb-3">
-                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                        <strong>35+</strong> field types
-                                    </li>
-                                    <li class="mb-3">
-                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                        Call center &amp; demographic fields
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <ul class="list-unstyled">
-                                    <li class="mb-3">
-                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                        CSV, JSON, SQL formats
-                                    </li>
-                                    <li class="mb-3">
-                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                        <strong>Kaggle</strong> dataset cloning
-                                    </li>
-                                    <li class="mb-3">
-                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                        Encrypted credential storage
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <hr class="my-4">
-
-                        <div class="text-center">
-                            {% if current_user.is_authenticated %}
-                            <a href="{{ url_for('generator.index') }}" class="btn btn-success btn-lg">
-                                <i class="bi bi-lightning-charge-fill me-2"></i>Start Generating
-                            </a>
-                            {% else %}
-                            <a href="{{ url_for('auth.register') }}" class="btn btn-success btn-lg">
-                                <i class="bi bi-rocket-takeoff me-2"></i>Create Free Account
-                            </a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
+                <h1 class="fw-bold mb-3">Free and open source. That's the whole model.</h1>
+                <p class="lede mb-0">SynGen isn't a product with a free tier — it's software you can read, run, and modify. Deploy it yourself (Railway, Vercel, or anywhere that runs Python). There is no paid plan.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Why Free Section -->
-<section class="bg-light py-5">
+<!-- What that means -->
+<section class="section">
     <div class="container">
-        <h2 class="text-center fw-bold mb-5">Why Is It Free?</h2>
-        <div class="row g-4 justify-content-center">
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center p-4">
-                        <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                            <i class="bi bi-heart text-primary fs-3"></i>
-                        </div>
-                        <h5>Community First</h5>
-                        <p class="text-muted mb-0">We believe developers and testers should have access to quality tools without barriers.</p>
-                    </div>
-                </div>
+        <div class="feature-list">
+            <div class="feature">
+                <h3>No accounts required</h3>
+                <p>Clone the repository and run the CLI, API, or web UI locally — or deploy from GitHub to Railway or Vercel. Optional sign-in tracks your own API key and generation history on your instance.</p>
             </div>
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center p-4">
-                        <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                            <i class="bi bi-github text-success fs-3"></i>
-                        </div>
-                        <h5>Open Source</h5>
-                        <p class="text-muted mb-0">This project is open source. Contribute, fork, or self-host it yourself.</p>
-                    </div>
-                </div>
+            <div class="feature">
+                <h3>No tiers</h3>
+                <p>Every field type, every export format, and Kaggle schema cloning are available to everyone. There's nothing to unlock.</p>
             </div>
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center p-4">
-                        <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                            <i class="bi bi-lightbulb text-info fs-3"></i>
-                        </div>
-                        <h5>Learning Tool</h5>
-                        <p class="text-muted mb-0">Built as a learning project and shared to help others learn too.</p>
-                    </div>
-                </div>
+            <div class="feature">
+                <h3>Your limits, your instance</h3>
+                <p>Self-host with no caps, or set your own via env vars. There is no public hosted API to call — you run the stack.</p>
+            </div>
+            <div class="feature">
+                <h3>MIT licensed</h3>
+                <p>Fork it, self-host it, or use pieces of it in your own project. See the <a href="https://github.com/tedrubin80/Synteticdatagen" target="_blank" rel="noopener">GitHub repository</a> for the license and source.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Use Cases -->
-<section class="py-5">
+<!-- Use cases -->
+<section class="section-tight" style="background: var(--surface); border-top: 1px solid var(--border-soft); border-bottom: 1px solid var(--border-soft);">
     <div class="container">
-        <h2 class="text-center fw-bold mb-5">Perfect For</h2>
-        <div class="row g-4">
-            <div class="col-md-3">
-                <div class="text-center">
-                    <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex p-4 mb-3">
-                        <i class="bi bi-code-slash text-warning fs-2"></i>
-                    </div>
-                    <h5>Developers</h5>
-                    <p class="text-muted small">Seed databases, test APIs, and build prototypes with realistic data.</p>
-                </div>
+        <h2 class="h3 mb-5">Built for</h2>
+        <div class="feature-list">
+            <div class="feature">
+                <h3>Developers</h3>
+                <p>Seed databases, test APIs, and build prototypes with realistic data instead of hand-written fixtures.</p>
             </div>
-            <div class="col-md-3">
-                <div class="text-center">
-                    <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex p-4 mb-3">
-                        <i class="bi bi-bug text-danger fs-2"></i>
-                    </div>
-                    <h5>QA Engineers</h5>
-                    <p class="text-muted small">Generate diverse test data for comprehensive testing scenarios.</p>
-                </div>
+            <div class="feature">
+                <h3>QA engineers</h3>
+                <p>Generate varied, edge-case-friendly test data for real testing scenarios.</p>
             </div>
-            <div class="col-md-3">
-                <div class="text-center">
-                    <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-4 mb-3">
-                        <i class="bi bi-mortarboard text-primary fs-2"></i>
-                    </div>
-                    <h5>Students</h5>
-                    <p class="text-muted small">Learn data handling with sample datasets for projects and assignments.</p>
-                </div>
+            <div class="feature">
+                <h3>Students</h3>
+                <p>Practice data handling with sample datasets for coursework and side projects.</p>
             </div>
-            <div class="col-md-3">
-                <div class="text-center">
-                    <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex p-4 mb-3">
-                        <i class="bi bi-easel text-success fs-2"></i>
-                    </div>
-                    <h5>Designers</h5>
-                    <p class="text-muted small">Create realistic mockups and demos with believable placeholder data.</p>
-                </div>
+            <div class="feature">
+                <h3>Designers</h3>
+                <p>Fill mockups and demos with data that looks real instead of "Lorem ipsum."</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- FAQ -->
-<section class="bg-light py-5">
+<section class="section">
     <div class="container">
-        <h2 class="text-center fw-bold mb-5">Frequently Asked Questions</h2>
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                <div class="accordion" id="faqAccordion">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                                Is this really free?
-                            </button>
-                        </h2>
-                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                Yes, completely free! No premium tiers, no credit card required, no catch. The service is provided as-is for the community.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                                Are there any usage limits?
-                            </button>
-                        </h2>
-                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                Free accounts include 1,000 API requests per day and up to 100,000 rows per generation request. These limits help keep the service available for everyone.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                                Is the generated data safe to use?
-                            </button>
-                        </h2>
-                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                All generated data is completely synthetic and random. It doesn't contain any real personal information and is safe to use in development, testing, and demos.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
-                                Can I self-host this?
-                            </button>
-                        </h2>
-                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                Absolutely! The entire project is open source. Clone the repository, follow the setup instructions, and run your own instance.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
-                                How can I contribute?
-                            </button>
-                        </h2>
-                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                We welcome contributions! Check out our GitHub repository, open issues, submit pull requests, or help improve documentation.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
-                                How does Kaggle integration work?
-                            </button>
-                        </h2>
-                        <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                Search public Kaggle datasets from the generator. SynGen learns the column schema from a sample — no real data is stored. Save your Kaggle API credentials encrypted on your <a href="{{ url_for('auth.profile') }}">Profile</a> page.
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <h2 class="h3 mb-4">Questions</h2>
+
+                <details class="faq-item" open>
+                    <summary>Is this really free?</summary>
+                    <p>Yes. No premium tiers, no credit card, no catch. Run it yourself for free forever — locally, on Railway, or on Vercel.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>Where should I deploy it?</summary>
+                    <p>Either Railway or Vercel works. The repo includes <code>railway.toml</code> and <code>vercel.json</code> — connect the GitHub repo to one platform (not both). See the README for env vars.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>Is the generated data safe to use?</summary>
+                    <p>All output is synthetic and randomly generated — it never contains real personal information, so it's safe for development, testing, and demos.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>Can I self-host this?</summary>
+                    <p>That's the primary way it's meant to be used. Clone the <a href="https://github.com/tedrubin80/Synteticdatagen" target="_blank" rel="noopener">repository</a>, follow the setup instructions in the README, and run your own instance.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>How can I contribute?</summary>
+                    <p>Open an issue, submit a pull request, or improve the docs on <a href="https://github.com/tedrubin80/Synteticdatagen" target="_blank" rel="noopener">GitHub</a>. Contributions are welcome.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>How does Kaggle integration work?</summary>
+                    <p>Search public Kaggle datasets from the generator. SynGen learns the column schema from a sample — no real data is stored. Save your Kaggle API credentials encrypted on your <a href="{{ url_for('auth.profile') }}">profile</a> page.</p>
+                </details>
             </div>
         </div>
-    </div>
-</section>
-
-<!-- CTA -->
-<section class="py-5">
-    <div class="container text-center">
-        <h3 class="mb-4">Ready to generate some data?</h3>
-        {% if current_user.is_authenticated %}
-        <a href="{{ url_for('generator.index') }}" class="btn btn-primary btn-lg">
-            <i class="bi bi-lightning-charge-fill me-2"></i>Go to Generator
-        </a>
-        {% else %}
-        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg me-3">
-            <i class="bi bi-rocket-takeoff me-2"></i>Get Started
-        </a>
-        <a href="{{ url_for('api_docs.index') }}" class="btn btn-outline-primary btn-lg">
-            <i class="bi bi-book me-2"></i>Read the Docs
-        </a>
-        {% endif %}
     </div>
 </section>
 {% endblock %}

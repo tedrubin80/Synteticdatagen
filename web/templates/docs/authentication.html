@@ -3,135 +3,114 @@
 {% block title %}Authentication - API Docs{% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container section-tight">
     <div class="row">
         <!-- Sidebar -->
         <div class="col-lg-3 mb-4">
-            <div class="card shadow-sm sticky-top" style="top: 80px;">
-                <div class="card-body">
-                    <h6 class="text-muted mb-3">DOCUMENTATION</h6>
-                    <nav class="nav flex-column">
-                        <a class="nav-link" href="{{ url_for('api_docs.index') }}">
-                            <i class="bi bi-house me-2"></i>Overview
-                        </a>
-                        <a class="nav-link active" href="{{ url_for('api_docs.authentication') }}">
-                            <i class="bi bi-key me-2"></i>Authentication
-                        </a>
-                        <a class="nav-link" href="{{ url_for('api_docs.endpoints') }}">
-                            <i class="bi bi-diagram-3 me-2"></i>Endpoints
-                        </a>
-                        <a class="nav-link" href="{{ url_for('api_docs.examples') }}">
-                            <i class="bi bi-code-slash me-2"></i>Examples
-                        </a>
-                    </nav>
-                </div>
+            <div class="docs-sidebar sticky-top" style="top: 80px;">
+                <div class="tag-group-label mb-2">Documentation</div>
+                <nav class="docs-nav">
+                    <a href="{{ url_for('api_docs.index') }}">Overview</a>
+                    <a class="active" href="{{ url_for('api_docs.authentication') }}">Authentication</a>
+                    <a href="{{ url_for('api_docs.endpoints') }}">Endpoints</a>
+                    <a href="{{ url_for('api_docs.examples') }}">Examples</a>
+                </nav>
             </div>
         </div>
 
         <!-- Main Content -->
         <div class="col-lg-9">
-            <h1 class="mb-4">Authentication</h1>
+            <h1 class="h3 mb-4">Authentication</h1>
 
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <h5>API Key Authentication</h5>
-                    <p>All API requests require authentication using an API key. Include your API key in the <code>Authorization</code> header:</p>
+            <div class="mb-5">
+                <h2 class="docs-h">API key authentication</h2>
+                <p class="text-muted">All API requests require authentication using an API key. Include your API key in the <code>Authorization</code> header:</p>
 
-                    <div class="bg-dark text-light p-3 rounded mb-3">
-<pre class="mb-0"><code>Authorization: Bearer YOUR_API_KEY</code></pre>
-                    </div>
+                <div class="term mb-3">
+                    <div class="term-body">Authorization: Bearer YOUR_API_KEY</div>
+                </div>
 
-                    <div class="alert alert-warning">
-                        <i class="bi bi-exclamation-triangle me-2"></i>
-                        <strong>Keep your API key secret!</strong> Do not share it publicly or commit it to version control.
-                    </div>
+                <div class="alert alert-warning mb-0">
+                    <strong>Keep your API key secret.</strong> Do not share it publicly or commit it to version control.
                 </div>
             </div>
 
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <h5>Getting Your API Key</h5>
-                    <ol>
-                        <li>Create an account or log in at <a href="{{ url_for('auth.register') }}">SynGen Pro</a></li>
-                        <li>Navigate to your <a href="{{ url_for('auth.profile') }}">Profile</a> page</li>
-                        <li>Your API key is displayed in the "API Key" section</li>
-                        <li>Click "Copy" to copy it to your clipboard</li>
-                    </ol>
+            <div class="mb-5">
+                <h2 class="docs-h">Getting your API key</h2>
+                <ol class="text-muted">
+                    <li>Create an account or log in on <a href="{{ url_for('auth.register') }}">SynGen</a></li>
+                    <li>Navigate to your <a href="{{ url_for('auth.profile') }}">profile</a> page</li>
+                    <li>Your API key is displayed in the "API key" section</li>
+                    <li>Click "Copy" to copy it to your clipboard</li>
+                </ol>
 
-                    {% if current_user.is_authenticated %}
-                    <div class="alert alert-success">
-                        <i class="bi bi-check-circle me-2"></i>
-                        <strong>Your API Key:</strong>
-                        <code class="ms-2">{{ current_user.api_key[:20] }}...</code>
-                        <a href="{{ url_for('auth.profile') }}" class="ms-2">View full key</a>
-                    </div>
-                    {% else %}
-                    <div class="alert alert-info">
-                        <i class="bi bi-info-circle me-2"></i>
-                        <a href="{{ url_for('auth.login') }}">Log in</a> to view your API key.
-                    </div>
-                    {% endif %}
+                {% if current_user.is_authenticated %}
+                <div class="alert alert-success mb-0">
+                    <strong>Your API key:</strong>
+                    <code class="ms-2">{{ current_user.api_key[:20] }}...</code>
+                    <a href="{{ url_for('auth.profile') }}" class="ms-2">View full key</a>
                 </div>
+                {% else %}
+                <div class="alert alert-info mb-0">
+                    <a href="{{ url_for('auth.login') }}">Log in</a> to view your API key.
+                </div>
+                {% endif %}
             </div>
 
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <h5>Example Request</h5>
-                    <div class="bg-dark text-light p-3 rounded">
-<pre class="mb-0"><code># Using curl
-curl -X POST https://your-domain.com/api/generate \
-  -H "Authorization: Bearer sk_live_abc123..." \
-  -H "Content-Type: application/json" \
-  -d '{"rows": 10, "format": "json", "fields": [...]}'
+            <div class="mb-5">
+                <h2 class="docs-h">Example request</h2>
+                <div class="term">
+                    <div class="term-body"><span class="comment"># Using curl</span>
+<span class="prompt">$</span> curl -X POST http://localhost:8000/generate \
+  -H <span class="str">"Authorization: Bearer sk_live_abc123..."</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{"rows": 10, "format": "json", "fields": [...]}'</span>
 
-# Using Python
-import requests
+<span class="comment"># Using Python</span>
+<span class="key">import</span> requests
 
 headers = {
-    "Authorization": "Bearer sk_live_abc123...",
-    "Content-Type": "application/json"
+    <span class="key">"Authorization"</span>: <span class="str">"Bearer sk_live_abc123..."</span>,
+    <span class="key">"Content-Type"</span>: <span class="str">"application/json"</span>
 }
 
 response = requests.post(
-    "https://your-domain.com/api/generate",
+    <span class="str">"http://localhost:8000/generate"</span>,
     headers=headers,
-    json={"rows": 10, "format": "json", "fields": [...]}
-)</code></pre>
-                    </div>
+    json={<span class="key">"rows"</span>: <span class="num">10</span>, <span class="key">"format"</span>: <span class="str">"json"</span>, <span class="key">"fields"</span>: [...]}
+)</div>
                 </div>
             </div>
 
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5>Error Responses</h5>
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Status</th>
-                                    <th>Error</th>
-                                    <th>Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><code>401</code></td>
-                                    <td>Unauthorized</td>
-                                    <td>Missing or invalid API key</td>
-                                </tr>
-                                <tr>
-                                    <td><code>403</code></td>
-                                    <td>Forbidden</td>
-                                    <td>API key is valid but lacks permission</td>
-                                </tr>
-                                <tr>
-                                    <td><code>429</code></td>
-                                    <td>Rate Limited</td>
-                                    <td>Daily limit of 1,000 requests exceeded (resets at midnight UTC)</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+            <div>
+                <h2 class="docs-h">Error responses</h2>
+                <div class="table-responsive">
+                    <table class="endpoint-table">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Error</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>401</code></td>
+                                <td>Unauthorized</td>
+                                <td>Missing or invalid API key</td>
+                            </tr>
+                            <tr>
+                                <td><code>403</code></td>
+                                <td>Forbidden</td>
+                                <td>API key is valid but lacks permission</td>
+                            </tr>
+                            <tr>
+                                <td><code>429</code></td>
+                                <td>Rate limited</td>
+                                <td>Daily limit of 1,000 requests exceeded (resets at midnight UTC)</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

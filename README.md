@@ -257,19 +257,47 @@ See [web/README.md](web/README.md) for detailed web application documentation.
 
 ## Deployment
 
-### Development
+Pick **one** host — configs for both ship in the repo, but you only connect GitHub to a single platform.
+
+Required env vars on either host: `SECRET_KEY`, `APP_ENCRYPTION_KEY`, `PRODUCTION=1` (see `.env.example`). Use a Postgres `DATABASE_URL` on Railway/Vercel; SQLite is fine for local development.
+
+### Option A: Railway
+
+1. Create a project at [railway.app](https://railway.app) → **Deploy from GitHub** → select `tedrubin80/Synteticdatagen`.
+2. Add a Postgres plugin (or set `DATABASE_URL` yourself).
+3. Set `SECRET_KEY`, `APP_ENCRYPTION_KEY`, and `PRODUCTION=1`.
+4. Deploy. `railway.toml` starts gunicorn via `wsgi:app` on `$PORT`.
+
+```bash
+# Or from the Railway CLI after linking the repo
+railway up
+```
+
+### Option B: Vercel
+
+1. Import the same GitHub repo at [vercel.com/new](https://vercel.com/new).
+2. Vercel detects Flask via `wsgi.py` (`pyproject.toml` → `[tool.vercel] entrypoint`).
+3. Add the same env vars plus a hosted Postgres `DATABASE_URL` (Vercel Postgres, Neon, etc.).
+4. Deploy. `vercel.json` sets `maxDuration` for generation workloads.
+
+```bash
+vercel          # preview
+vercel --prod   # production
+```
+
+### Local / self-hosted
 
 ```bash
 cd web
 FLASK_DEBUG=1 python3 app.py
+# or
+gunicorn --workers 2 --bind 0.0.0.0:8000 wsgi:app
 ```
 
-### Production with Gunicorn
+The FastAPI server (`api/`) is optional for self-host only — there is no public hosted API:
 
 ```bash
-pip install gunicorn
-cd web
-gunicorn -w 4 -b 0.0.0.0:8000 "app:create_app()"
+uvicorn api.app:app --host 0.0.0.0 --port 8000
 ```
 
 ### Docker
@@ -280,9 +308,8 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
-WORKDIR /app/web
 EXPOSE 5000
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:create_app()"]
+CMD ["gunicorn", "--workers", "2", "--bind", "0.0.0.0:5000", "wsgi:app"]
 ```
 
 ## Contributing

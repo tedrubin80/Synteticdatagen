@@ -3,229 +3,185 @@
 {% block title %}Endpoints - API Docs{% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container section-tight">
     <div class="row">
         <!-- Sidebar -->
         <div class="col-lg-3 mb-4">
-            <div class="card shadow-sm sticky-top" style="top: 80px;">
-                <div class="card-body">
-                    <h6 class="text-muted mb-3">DOCUMENTATION</h6>
-                    <nav class="nav flex-column">
-                        <a class="nav-link" href="{{ url_for('api_docs.index') }}">
-                            <i class="bi bi-house me-2"></i>Overview
-                        </a>
-                        <a class="nav-link" href="{{ url_for('api_docs.authentication') }}">
-                            <i class="bi bi-key me-2"></i>Authentication
-                        </a>
-                        <a class="nav-link active" href="{{ url_for('api_docs.endpoints') }}">
-                            <i class="bi bi-diagram-3 me-2"></i>Endpoints
-                        </a>
-                        <a class="nav-link" href="{{ url_for('api_docs.examples') }}">
-                            <i class="bi bi-code-slash me-2"></i>Examples
-                        </a>
-                    </nav>
-                </div>
+            <div class="docs-sidebar sticky-top" style="top: 80px;">
+                <div class="tag-group-label mb-2">Documentation</div>
+                <nav class="docs-nav">
+                    <a href="{{ url_for('api_docs.index') }}">Overview</a>
+                    <a href="{{ url_for('api_docs.authentication') }}">Authentication</a>
+                    <a class="active" href="{{ url_for('api_docs.endpoints') }}">Endpoints</a>
+                    <a href="{{ url_for('api_docs.examples') }}">Examples</a>
+                </nav>
             </div>
         </div>
 
         <!-- Main Content -->
         <div class="col-lg-9">
-            <h1 class="mb-4">API Endpoints</h1>
+            <h1 class="h3 mb-4">API endpoints</h1>
 
             <!-- Generate Endpoint -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-success text-white">
-                    <span class="badge bg-light text-success me-2">POST</span>
-                    <code class="text-white">/api/generate</code>
+            <div class="mb-5">
+                <h2 class="docs-h"><span class="method method-post">POST</span> <code>/generate</code></h2>
+                <p class="text-muted">Generate synthetic data based on the provided schema.</p>
+
+                <h6 class="mt-4">Request body</h6>
+                <div class="table-responsive">
+                    <table class="endpoint-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>rows</code></td>
+                                <td>integer</td>
+                                <td>Required</td>
+                                <td>Number of rows to generate (1-100,000)</td>
+                            </tr>
+                            <tr>
+                                <td><code>format</code></td>
+                                <td>string</td>
+                                <td class="text-muted">Optional</td>
+                                <td>Output format: <code>json</code>, <code>csv</code>, or <code>sql</code>. Default: <code>json</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>table_name</code></td>
+                                <td>string</td>
+                                <td class="text-muted">Optional</td>
+                                <td>Table name for SQL format. Default: <code>synthetic_data</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>fields</code></td>
+                                <td>array</td>
+                                <td>Required</td>
+                                <td>Array of field definitions (see below)</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="card-body">
-                    <h5>Generate Synthetic Data</h5>
-                    <p>Generate synthetic data based on the provided schema.</p>
 
-                    <h6 class="mt-4">Request Body</h6>
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Parameter</th>
-                                    <th>Type</th>
-                                    <th>Required</th>
-                                    <th>Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><code>rows</code></td>
-                                    <td>integer</td>
-                                    <td><span class="badge bg-danger">Required</span></td>
-                                    <td>Number of rows to generate (1-100,000)</td>
-                                </tr>
-                                <tr>
-                                    <td><code>format</code></td>
-                                    <td>string</td>
-                                    <td><span class="badge bg-secondary">Optional</span></td>
-                                    <td>Output format: <code>json</code>, <code>csv</code>, or <code>sql</code>. Default: <code>json</code></td>
-                                </tr>
-                                <tr>
-                                    <td><code>table_name</code></td>
-                                    <td>string</td>
-                                    <td><span class="badge bg-secondary">Optional</span></td>
-                                    <td>Table name for SQL format. Default: <code>synthetic_data</code></td>
-                                </tr>
-                                <tr>
-                                    <td><code>fields</code></td>
-                                    <td>array</td>
-                                    <td><span class="badge bg-danger">Required</span></td>
-                                    <td>Array of field definitions (see below)</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <h6 class="mt-4">Field object</h6>
+                <div class="table-responsive">
+                    <table class="endpoint-table">
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>name</code></td>
+                                <td>string</td>
+                                <td>Required</td>
+                                <td>Field name (column name)</td>
+                            </tr>
+                            <tr>
+                                <td><code>type</code></td>
+                                <td>string</td>
+                                <td>Required</td>
+                                <td>Data type (see supported types)</td>
+                            </tr>
+                            <tr>
+                                <td><code>constraints</code></td>
+                                <td>object</td>
+                                <td class="text-muted">Optional</td>
+                                <td>Type-specific constraints</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-                    <h6 class="mt-4">Field Object</h6>
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Property</th>
-                                    <th>Type</th>
-                                    <th>Required</th>
-                                    <th>Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><code>name</code></td>
-                                    <td>string</td>
-                                    <td><span class="badge bg-danger">Required</span></td>
-                                    <td>Field name (column name)</td>
-                                </tr>
-                                <tr>
-                                    <td><code>type</code></td>
-                                    <td>string</td>
-                                    <td><span class="badge bg-danger">Required</span></td>
-                                    <td>Data type (see supported types)</td>
-                                </tr>
-                                <tr>
-                                    <td><code>constraints</code></td>
-                                    <td>object</td>
-                                    <td><span class="badge bg-secondary">Optional</span></td>
-                                    <td>Type-specific constraints</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <h6 class="mt-4">Example request</h6>
+                <div class="term">
+                    <div class="term-body"><span class="key">{</span>
+  <span class="key">"rows"</span>: <span class="num">100</span>,
+  <span class="key">"format"</span>: <span class="str">"json"</span>,
+  <span class="key">"fields"</span>: <span class="key">[</span>
+    <span class="key">{</span>
+      <span class="key">"name"</span>: <span class="str">"id"</span>,
+      <span class="key">"type"</span>: <span class="str">"integer"</span>,
+      <span class="key">"constraints"</span>: {<span class="key">"min"</span>: <span class="num">1</span>, <span class="key">"max"</span>: <span class="num">10000</span>}
+    <span class="key">}</span>,
+    <span class="key">{</span> <span class="key">"name"</span>: <span class="str">"email"</span>, <span class="key">"type"</span>: <span class="str">"email"</span> <span class="key">}</span>,
+    <span class="key">{</span>
+      <span class="key">"name"</span>: <span class="str">"created_at"</span>,
+      <span class="key">"type"</span>: <span class="str">"date"</span>,
+      <span class="key">"constraints"</span>: {<span class="key">"start"</span>: <span class="str">"2024-01-01"</span>, <span class="key">"end"</span>: <span class="str">"2024-12-31"</span>}
+    <span class="key">}</span>
+  <span class="key">]</span>
+<span class="key">}</span></div>
+                </div>
 
-                    <h6 class="mt-4">Example Request</h6>
-                    <div class="bg-dark text-light p-3 rounded">
-<pre class="mb-0"><code>{
-  "rows": 100,
-  "format": "json",
-  "fields": [
-    {
-      "name": "id",
-      "type": "integer",
-      "constraints": {"min": 1, "max": 10000}
-    },
-    {
-      "name": "email",
-      "type": "email"
-    },
-    {
-      "name": "created_at",
-      "type": "date",
-      "constraints": {"start": "2024-01-01", "end": "2024-12-31"}
-    }
-  ]
-}</code></pre>
-                    </div>
-
-                    <h6 class="mt-4">Response</h6>
-                    <div class="bg-dark text-light p-3 rounded">
-<pre class="mb-0"><code>{
-  "success": true,
-  "rows_generated": 100,
-  "format": "json",
-  "data": [
-    {"id": 4521, "email": "john@example.com", "created_at": "2024-03-15"},
-    ...
-  ]
-}</code></pre>
-                    </div>
+                <h6 class="mt-4">Response</h6>
+                <div class="term">
+                    <div class="term-body"><span class="key">{</span>
+  <span class="key">"success"</span>: <span class="num">true</span>,
+  <span class="key">"rows_generated"</span>: <span class="num">100</span>,
+  <span class="key">"format"</span>: <span class="str">"json"</span>,
+  <span class="key">"data"</span>: <span class="key">[</span>
+    <span class="key">{</span><span class="key">"id"</span>: <span class="num">4521</span>, <span class="key">"email"</span>: <span class="str">"john@example.com"</span>, <span class="key">"created_at"</span>: <span class="str">"2024-03-15"</span><span class="key">}</span>,
+    <span class="comment">...</span>
+  <span class="key">]</span>
+<span class="key">}</span></div>
                 </div>
             </div>
 
             <!-- Preview Endpoint -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-success text-white">
-                    <span class="badge bg-light text-success me-2">POST</span>
-                    <code class="text-white">/api/generate/preview</code>
-                </div>
-                <div class="card-body">
-                    <h5>Preview Generation</h5>
-                    <p>Same as <code>/generate</code> but capped at 10 rows and always returns JSON. Requires authentication.</p>
-                </div>
+            <div class="mb-5">
+                <h2 class="docs-h"><span class="method method-post">POST</span> <code>/generate/preview</code></h2>
+                <p class="text-muted mb-0">Same as <code>/generate</code> but capped at 10 rows and always returns JSON. Requires authentication.</p>
             </div>
 
             <!-- Kaggle Endpoints -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-warning text-dark">
-                    <span class="badge bg-dark me-2">POST</span>
-                    <code>/api/kaggle/search</code> · <code>/api/kaggle/schema</code> · <code>/api/kaggle/clone</code>
-                </div>
-                <div class="card-body">
-                    <h5>Kaggle Dataset Integration</h5>
-                    <p>Search public Kaggle datasets, learn their schema, or generate a synthetic clone in one call. All endpoints require API key authentication.</p>
-                    <ul>
-                        <li><code>/kaggle/search</code> — search datasets by keyword</li>
-                        <li><code>/kaggle/schema</code> — infer field types from a dataset sample (no real rows returned)</li>
-                        <li><code>/kaggle/clone</code> — learn schema and generate synthetic data in one step</li>
-                    </ul>
-                    <p class="text-muted small mb-0">Kaggle credentials are sent per-request. In the web UI, you can save them encrypted on your Profile.</p>
-                </div>
+            <div class="mb-5">
+                <h2 class="docs-h"><span class="method method-post">POST</span> <code>/kaggle/search</code> · <code>/kaggle/schema</code> · <code>/kaggle/clone</code></h2>
+                <p class="text-muted">Search public Kaggle datasets, learn their schema, or generate a synthetic clone in one call. All endpoints require API key authentication.</p>
+                <ul class="text-muted">
+                    <li><code>/kaggle/search</code> — search datasets by keyword</li>
+                    <li><code>/kaggle/schema</code> — infer field types from a dataset sample (no real rows returned)</li>
+                    <li><code>/kaggle/clone</code> — learn schema and generate synthetic data in one step</li>
+                </ul>
+                <p class="text-muted small mb-0">Kaggle credentials are sent per-request. In the web UI, you can save them encrypted on your Profile.</p>
             </div>
 
             <!-- Health Check Endpoint -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-primary text-white">
-                    <span class="badge bg-light text-primary me-2">GET</span>
-                    <code class="text-white">/api/health</code>
-                </div>
-                <div class="card-body">
-                    <h5>Health Check</h5>
-                    <p>Check if the API is running and healthy. No authentication required.</p>
+            <div class="mb-5">
+                <h2 class="docs-h"><span class="method method-get">GET</span> <code>/health</code></h2>
+                <p class="text-muted">Check if the API is running and healthy. No authentication required.</p>
 
-                    <h6 class="mt-4">Response</h6>
-                    <div class="bg-dark text-light p-3 rounded">
-<pre class="mb-0"><code>{
-  "status": "healthy",
-  "version": "1.0.0"
-}</code></pre>
-                    </div>
+                <h6 class="mt-4">Response</h6>
+                <div class="term">
+                    <div class="term-body"><span class="key">{</span>
+  <span class="key">"status"</span>: <span class="str">"healthy"</span>,
+  <span class="key">"version"</span>: <span class="str">"1.0.0"</span>
+<span class="key">}</span></div>
                 </div>
             </div>
 
             <!-- Field Types Endpoint -->
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <span class="badge bg-light text-primary me-2">GET</span>
-                    <code class="text-white">/api/field-types</code>
-                </div>
-                <div class="card-body">
-                    <h5>List Field Types</h5>
-                    <p>Get all 35+ supported field types and their constraints. No authentication required.</p>
+            <div>
+                <h2 class="docs-h"><span class="method method-get">GET</span> <code>/field-types</code></h2>
+                <p class="text-muted">Get all 35+ supported field types and their constraints. No authentication required.</p>
 
-                    <h6 class="mt-4">Response</h6>
-                    <div class="bg-dark text-light p-3 rounded">
-<pre class="mb-0"><code>{
-  "field_types": [
-    {"type": "integer", "description": "Random integer within range", "supported_constraints": ["min", "max"]},
-    {"type": "csat_score", "description": "Customer satisfaction score", "supported_constraints": ["scale", "choices", "weights"]},
-    {"type": "age", "description": "Age in years", "supported_constraints": ["min", "max", "mode"]},
-    ...
-  ]
-}</code></pre>
-                    </div>
+                <h6 class="mt-4">Response</h6>
+                <div class="term">
+                    <div class="term-body"><span class="key">{</span>
+  <span class="key">"field_types"</span>: <span class="key">[</span>
+    <span class="key">{</span><span class="key">"type"</span>: <span class="str">"integer"</span>, <span class="key">"description"</span>: <span class="str">"Random integer within range"</span>, <span class="key">"supported_constraints"</span>: [<span class="str">"min"</span>, <span class="str">"max"</span>]<span class="key">}</span>,
+    <span class="key">{</span><span class="key">"type"</span>: <span class="str">"csat_score"</span>, <span class="key">"description"</span>: <span class="str">"Customer satisfaction score"</span>, <span class="key">"supported_constraints"</span>: [<span class="str">"scale"</span>, <span class="str">"choices"</span>, <span class="str">"weights"</span>]<span class="key">}</span>,
+    <span class="comment">...</span>
+  <span class="key">]</span>
+<span class="key">}</span></div>
                 </div>
             </div>
         </div>

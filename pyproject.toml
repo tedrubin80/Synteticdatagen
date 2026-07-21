@@ -1,0 +1,11 @@
+[project]
+name = "syngen"
+version = "1.0.0"
+description = "Free open-source synthetic data generator (CLI, REST API, web UI)"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+
+[tool.vercel]
+# Shared entrypoint also used by Railway (see railway.toml / wsgi.py)
+entrypoint = "wsgi:app"

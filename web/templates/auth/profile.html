@@ -3,58 +3,46 @@
 {% block title %}Profile{% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container section-tight">
     <div class="row">
         <div class="col-lg-4 mb-4">
-            <div class="card shadow-sm">
+            <div class="card">
                 <div class="card-body text-center p-4">
-                    <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-4 mb-3">
-                        <i class="bi bi-person-fill text-primary fs-1"></i>
-                    </div>
-                    <h4>{{ current_user.username }}</h4>
-                    <p class="text-muted">{{ current_user.email }}</p>
-                    <span class="badge {% if current_user.is_pro %}bg-warning{% else %}bg-secondary{% endif %}">
-                        Free Plan
-                    </span>
+                    <h4 class="mb-1">{{ current_user.username }}</h4>
+                    <p class="text-muted mb-0">{{ current_user.email }}</p>
                 </div>
             </div>
         </div>
 
         <div class="col-lg-8">
             <!-- Usage Stats -->
-            <div class="card shadow-sm mb-4">
+            <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="bi bi-graph-up me-2"></i>Usage Statistics</h5>
+                    <h5 class="mb-0">Usage</h5>
                 </div>
                 <div class="card-body">
-                    <div class="row g-4">
-                        <div class="col-md-4">
-                            <div class="text-center">
-                                <h3 class="text-primary">{{ current_user.requests_today }}</h3>
-                                <p class="text-muted mb-0">Requests Today</p>
-                            </div>
+                    <div class="stat-row">
+                        <div class="stat">
+                            <strong>{{ current_user.requests_today }}</strong>
+                            <span>Requests today</span>
                         </div>
-                        <div class="col-md-4">
-                            <div class="text-center">
-                                <h3 class="text-success">{{ current_user.total_requests }}</h3>
-                                <p class="text-muted mb-0">Total Requests</p>
-                            </div>
+                        <div class="stat">
+                            <strong>{{ current_user.total_requests }}</strong>
+                            <span>Total requests</span>
                         </div>
-                        <div class="col-md-4">
-                            <div class="text-center">
-                                <h3 class="text-info">{{ current_user.get_daily_limit() }}</h3>
-                                <p class="text-muted mb-0">Daily Limit</p>
-                            </div>
+                        <div class="stat">
+                            <strong>{{ current_user.get_daily_limit() }}</strong>
+                            <span>Daily limit</span>
                         </div>
                     </div>
 
                     <div class="mt-4">
-                        <label class="form-label small text-muted">Daily Usage</label>
-                        <div class="progress" style="height: 10px;">
+                        <label class="form-label small text-muted">Daily usage</label>
+                        <div class="progress" style="height: 6px;">
                             {% set usage_percent = (current_user.requests_today / current_user.get_daily_limit() * 100) | int %}
-                            <div class="progress-bar {% if usage_percent > 80 %}bg-danger{% elif usage_percent > 50 %}bg-warning{% else %}bg-success{% endif %}"
+                            <div class="progress-bar"
                                  role="progressbar"
-                                 style="width: {{ usage_percent }}%">
+                                 style="width: {{ usage_percent }}%; background: var(--primary);">
                             </div>
                         </div>
                         <small class="text-muted">{{ current_user.requests_today }} / {{ current_user.get_daily_limit() }} requests used</small>
@@ -63,9 +51,9 @@
             </div>
 
             <!-- API Key -->
-            <div class="card shadow-sm mb-4">
+            <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="bi bi-key me-2"></i>API Key</h5>
+                    <h5 class="mb-0">API key</h5>
                 </div>
                 <div class="card-body">
                     <p class="text-muted small">Use this key to authenticate API requests. Keep it secret!</p>
@@ -82,17 +70,15 @@
                     <form method="POST" action="{{ url_for('auth.regenerate_api_key') }}" class="d-inline">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button type="submit" class="btn btn-outline-danger btn-sm"
-                                onclick="return confirm('Are you sure? This will invalidate your current API key.')">
-                            <i class="bi bi-arrow-repeat me-1"></i>Regenerate Key
-                        </button>
+                                onclick="return confirm('Are you sure? This will invalidate your current API key.')">Regenerate key</button>
                     </form>
                 </div>
             </div>
 
             <!-- Kaggle Integration -->
-            <div class="card shadow-sm mb-4">
+            <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="bi bi-cloud-download me-2"></i>Kaggle Integration</h5>
+                    <h5 class="mb-0">Kaggle integration</h5>
                 </div>
                 <div class="card-body">
                     <p class="text-muted small">
@@ -104,17 +90,15 @@
 
                     {% if current_user.has_kaggle_credentials() %}
                     <div class="alert alert-success py-2 px-3 d-flex justify-content-between align-items-center mb-3">
-                        <span><i class="bi bi-check-circle me-1"></i>Connected as <strong>{{ current_user.kaggle_username }}</strong></span>
+                        <span>Connected as <strong>{{ current_user.kaggle_username }}</strong></span>
                     </div>
                     <form method="POST" action="{{ url_for('auth.remove_kaggle_credentials') }}" class="d-inline">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button type="submit" class="btn btn-outline-danger btn-sm"
-                                onclick="return confirm('Remove your saved Kaggle credentials?')">
-                            <i class="bi bi-x-circle me-1"></i>Remove Credentials
-                        </button>
+                                onclick="return confirm('Remove your saved Kaggle credentials?')">Remove credentials</button>
                     </form>
                     <a class="btn btn-outline-secondary btn-sm" data-bs-toggle="collapse" href="#kaggleCredForm" role="button">
-                        Update Credentials
+                        Update credentials
                     </a>
                     <div class="collapse mt-3" id="kaggleCredForm">
                     {% else %}
@@ -130,39 +114,36 @@
                                     <input type="password" class="form-control form-control-sm" name="kaggle_key" placeholder="Kaggle API key" required>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-sm mt-2">
-                                <i class="bi bi-save me-1"></i>Save Credentials
-                            </button>
+                            <button type="submit" class="btn btn-primary btn-sm mt-2">Save credentials</button>
                         </form>
                     </div>
                 </div>
             </div>
 
             <!-- Account Info -->
-            <div class="card shadow-sm">
+            <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Account Information</h5>
+                    <h5 class="mb-0">Account information</h5>
                 </div>
                 <div class="card-body">
                     <table class="table table-borderless mb-0">
                         <tr>
-                            <td class="text-muted">Member Since</td>
+                            <td class="text-muted">Member since</td>
                             <td>{{ current_user.created_at.strftime('%B %d, %Y') }}</td>
                         </tr>
                         <tr>
-                            <td class="text-muted">Account Status</td>
-                            <td><span class="badge bg-success">Active</span></td>
+                            <td class="text-muted">Account status</td>
+                            <td>Active</td>
                         </tr>
                         <tr>
-                            <td class="text-muted">Max Rows per Request</td>
+                            <td class="text-muted">Max rows per request</td>
                             <td>{{ "{:,}".format(current_user.get_max_rows()) }}</td>
                         </tr>
+                        <tr>
+                            <td class="text-muted">Daily request limit</td>
+                            <td>{{ current_user.get_daily_limit() }}</td>
+                        </tr>
                     </table>
-
-                    <div class="bg-success bg-opacity-10 rounded p-3">
-                        <h6><i class="bi bi-gift text-success me-2"></i>All Features Included</h6>
-                        <p class="small mb-0">1,000 requests/day and up to 100,000 rows per request — completely free, no premium tier.</p>
-                    </div>
                 </div>
             </div>
         </div>
