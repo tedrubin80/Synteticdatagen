@@ -1,0 +1,11 @@
+# Force Nixpacks/Railpack to treat this as Python, not PHP.
+# SynGen has no public/ directory and is not a Laravel app.
+
+[phases.setup]
+nixPkgs = ["python312", "postgresql"]
+
+[phases.install]
+cmds = ["pip install -r requirements.txt"]
+
+[start]
+cmd = "gunicorn --workers 2 --bind 0.0.0.0:$PORT wsgi:app"

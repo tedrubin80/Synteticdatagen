@@ -1,9 +1,13 @@
-# Railway config-as-code for SynGen
+# Railway config-as-code for SynGen (Python / Flask)
 # Use this OR Vercel — connect the GitHub repo to one platform.
 # https://docs.railway.com/config-as-code
+#
+# This is a Python app (wsgi.py + requirements.txt). Do not use a
+# PHP/Laravel service template — there is no public/ directory.
 
 [build]
 builder = "RAILPACK"
+buildCommand = "pip install -r requirements.txt"
 
 [deploy]
 startCommand = "gunicorn --workers 2 --bind 0.0.0.0:$PORT wsgi:app"
