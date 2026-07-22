@@ -21,7 +21,12 @@ limiter = Limiter(key_func=get_remote_address, storage_uri='memory://')
 
 
 def create_app(config_class=Config):
-    app = Flask(__name__)
+    web_root = os.path.dirname(os.path.abspath(__file__))
+    app = Flask(
+        __name__,
+        template_folder=os.path.join(web_root, 'templates'),
+        static_folder=os.path.join(web_root, 'static'),
+    )
     app.config.from_object(config_class)
 
     # Trust X-Forwarded-* from Railway, Vercel, and nginx
@@ -48,9 +53,17 @@ def create_app(config_class=Config):
     app.register_blueprint(generator_bp, url_prefix='/generator')
     app.register_blueprint(api_docs_bp, url_prefix='/docs')
 
-    # Create database tables
+    # Create database tables (skip hard crash if DB is briefly unreachable)
     with app.app_context():
-        db.create_all()
+        try:
+            db.create_all()
+        except Exception as exc:
+            app.logger.exception('Database init failed: %s', exc)
+            if os.environ.get('VERCEL') or os.environ.get('RAILWAY_ENVIRONMENT'):
+                raise RuntimeError(
+                    'Database init failed. Set a reachable DATABASE_URL '
+                    '(Postgres recommended on Vercel/Railway).'
+                ) from exc
 
     return app
 

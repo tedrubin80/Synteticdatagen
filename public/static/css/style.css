@@ -1,0 +1,550 @@
+/* SynGen — open-source synthetic data generator
+   Dark terminal aesthetic. Restrained palette: one signal blue, one
+   terminal green, everything else near-black neutral. */
+
+:root {
+  --bg:          oklch(0.09  0     0);
+  --surface:     oklch(0.15  0.006 230);
+  --surface-2:   oklch(0.20  0.008 230);
+  --border:      oklch(0.28  0.01  230);
+  --border-soft: oklch(0.22 0.008 230);
+  --ink:         oklch(0.93  0.01  230);
+  --muted:       oklch(0.62  0.014 230);
+  --primary:     oklch(0.70  0.15  230);
+  --primary-ink: oklch(0.98  0     0);
+  --accent:      oklch(0.75  0.17  150);
+  --danger:      oklch(0.66  0.19  25);
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+
+  --radius: 6px;
+  --space-section: clamp(3rem, 8vw, 6rem);
+
+  /* Bootstrap 5 dark-mode variable overrides so unstyled pages
+     (dashboard, generator, auth) inherit the same palette. */
+  --bs-body-bg: var(--bg);
+  --bs-body-color: var(--ink);
+  --bs-border-color: var(--border);
+  --bs-primary: oklch(0.70 0.15 230);
+  --bs-primary-rgb: 74, 144, 217;
+  --bs-link-color: var(--primary);
+  --bs-link-hover-color: var(--primary);
+  --bs-secondary-color: var(--muted);
+  --bs-tertiary-bg: var(--surface);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+code, pre, kbd, samp {
+  font-family: var(--font-mono);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+p { text-wrap: pretty; }
+
+a { color: var(--primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+::selection { background: var(--primary); color: var(--primary-ink); }
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ---------- Layout rhythm ---------- */
+
+.section {
+  padding-top: var(--space-section);
+  padding-bottom: var(--space-section);
+}
+
+.section-tight {
+  padding-top: calc(var(--space-section) * 0.6);
+  padding-bottom: calc(var(--space-section) * 0.6);
+}
+
+.prose { max-width: 68ch; }
+
+/* ---------- Navbar ---------- */
+
+.navbar {
+  background: var(--bg) !important;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.navbar-brand {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink) !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbar-brand .prompt {
+  color: var(--accent);
+}
+
+.navbar .nav-link {
+  color: var(--muted) !important;
+  font-size: 0.925rem;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+  color: var(--ink) !important;
+}
+
+.nav-github {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.35rem 0.75rem;
+  color: var(--ink) !important;
+  font-size: 0.875rem;
+  transition: border-color 150ms ease-out, background-color 150ms ease-out;
+}
+
+.nav-github:hover {
+  border-color: var(--muted);
+  background: var(--surface);
+  text-decoration: none;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  border-radius: var(--radius);
+  font-weight: 500;
+  transition: background-color 150ms ease-out, border-color 150ms ease-out, transform 150ms ease-out;
+}
+
+.btn-primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-ink);
+}
+
+.btn-primary:hover {
+  background: oklch(0.75 0.15 230);
+  border-color: oklch(0.75 0.15 230);
+  color: var(--primary-ink);
+}
+
+.btn-outline-light,
+.btn-outline-secondary {
+  border-color: var(--border);
+  color: var(--ink);
+}
+
+.btn-outline-light:hover,
+.btn-outline-secondary:hover {
+  background: var(--surface);
+  border-color: var(--muted);
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn, .card, .term-cursor { transition: none !important; animation: none !important; }
+}
+
+/* ---------- Terminal window ---------- */
+
+.term {
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.term-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.9rem;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.term-dot {
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  background: var(--border);
+}
+
+.term-path {
+  margin-left: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.term-body {
+  padding: 1.1rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.term-body .prompt { color: var(--accent); }
+.term-body .str { color: oklch(0.78 0.13 150); }
+.term-body .num { color: oklch(0.78 0.13 230); }
+.term-body .key { color: var(--muted); }
+.term-body .comment { color: var(--muted); font-style: italic; }
+
+.term-cursor {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  background: var(--accent);
+  vertical-align: text-bottom;
+  animation: blink 1.1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* ---------- Hero ---------- */
+
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+}
+
+.hero .lede {
+  color: var(--muted);
+  font-size: 1.125rem;
+  max-width: 60ch;
+}
+
+/* ---------- Field / tag list (replaces badge-pill grids) ---------- */
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 4px;
+  padding: 0.3rem 0.6rem;
+}
+
+.tag-group + .tag-group {
+  margin-top: 1.25rem;
+}
+
+.tag-group-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 0.6rem;
+}
+
+/* ---------- Flat feature list (replaces icon-circle card grid) ---------- */
+
+.feature-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem 2.5rem;
+}
+
+.feature {
+  border-top: 1px solid var(--border-soft);
+  padding-top: 1.1rem;
+}
+
+.feature h3 {
+  font-size: 1rem;
+  font-family: var(--font-mono);
+  margin-bottom: 0.5rem;
+}
+
+.feature p {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin-bottom: 0;
+}
+
+/* ---------- Endpoint table ---------- */
+
+.endpoint-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.endpoint-table th {
+  text-align: left;
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.endpoint-table td {
+  padding: 0.7rem 0.75rem;
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: middle;
+}
+
+.endpoint-table code {
+  color: var(--ink);
+}
+
+.method {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+.method-get { color: var(--accent); border-color: color-mix(in oklch, var(--accent) 40%, var(--border)); }
+.method-post { color: var(--primary); border-color: color-mix(in oklch, var(--primary) 40%, var(--border)); }
+
+/* ---------- Code tabs (quick start) ---------- */
+
+.code-tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: -1px;
+}
+
+.code-tab {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: none;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius) var(--radius) 0 0;
+  cursor: pointer;
+}
+
+.code-tab.active {
+  color: var(--ink);
+  background: var(--surface);
+  border-color: var(--border-soft);
+}
+
+/* ---------- Repo card (replaces pricing card) ---------- */
+
+.repo-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  background: var(--surface);
+}
+
+.repo-card .repo-path {
+  font-family: var(--font-mono);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.repo-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.repo-stat strong {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+}
+
+.repo-stat span {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+/* ---------- FAQ (native details/summary, no JS) ---------- */
+
+.faq-item {
+  border-bottom: 1px solid var(--border-soft);
+  padding: 1rem 0;
+}
+
+.faq-item summary {
+  cursor: pointer;
+  font-weight: 500;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.faq-item summary::-webkit-details-marker { display: none; }
+
+.faq-item summary::after {
+  content: "+";
+  color: var(--muted);
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+
+.faq-item[open] summary::after {
+  content: "\2212";
+}
+
+.faq-item p {
+  color: var(--muted);
+  margin: 0.75rem 0 0;
+}
+
+/* ---------- Footer ---------- */
+
+footer {
+  background: var(--bg);
+  border-top: 1px solid var(--border-soft);
+}
+
+footer a {
+  color: var(--muted);
+}
+
+footer a:hover {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+/* ---------- Docs sidebar ---------- */
+
+.docs-nav a {
+  display: block;
+  padding: 0.4rem 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  border-bottom: 1px solid transparent;
+}
+
+.docs-nav a:hover {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.docs-nav a.active {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.docs-h { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.75rem; }
+
+/* ---------- Stat row (replaces colored KPI cards) ---------- */
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1.5rem;
+}
+
+.stat {
+  border-top: 1px solid var(--border-soft);
+  padding-top: 0.75rem;
+}
+
+.stat strong {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.stat span {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* ---------- Plain link list (replaces icon-in-circle action lists) ---------- */
+
+.link-list a {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-soft);
+  color: var(--ink);
+}
+
+.link-list a:last-child { border-bottom: none; }
+
+.link-list a:hover { color: var(--primary); text-decoration: none; }
+
+.link-list small { color: var(--muted); font-size: 0.8rem; white-space: nowrap; }
+
+/* ---------- Cards (kept flat where Bootstrap components remain, e.g. auth forms) ---------- */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  box-shadow: none;
+  transform: none;
+  transition: none;
+}
+
+.card:hover { transform: none; }
+
+.form-control, .form-select {
+  background: var(--bg);
+  border-color: var(--border);
+  color: var(--ink);
+  border-radius: var(--radius);
+}
+
+.form-control:focus, .form-select:focus {
+  background: var(--bg);
+  color: var(--ink);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 25%, transparent);
+}
+
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--ink);
+  --bs-table-border-color: var(--border-soft);
+}
+
+/* Responsive: nudge section padding down, avoid heading overflow */
+@media (max-width: 576px) {
+  .hero h1 { font-size: clamp(1.75rem, 8vw, 2.25rem); }
+}

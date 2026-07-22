@@ -276,9 +276,15 @@ railway up
 ### Option B: Vercel
 
 1. Import the same GitHub repo at [vercel.com/new](https://vercel.com/new).
-2. Vercel detects Flask via `wsgi.py` (`pyproject.toml` → `[tool.vercel] entrypoint`).
-3. Add the same env vars plus a hosted Postgres `DATABASE_URL` (Vercel Postgres, Neon, etc.).
-4. Deploy. `vercel.json` sets `maxDuration` for generation workloads.
+2. Keep **Root Directory** as `/` (repo root). Vercel detects Flask via `wsgi.py` (`pyproject.toml` → `[tool.vercel] entrypoint`).
+3. In **Project Settings → Environment Variables**, set for Production (and Preview if you use it):
+   - `SECRET_KEY` — required (Vercel sets `VERCEL=1`; missing this crashes the function)
+   - `APP_ENCRYPTION_KEY` — Fernet key for stored secrets
+   - `PRODUCTION=1`
+   - `DATABASE_URL` — hosted Postgres (Neon, Vercel Postgres, etc.). Without it the app uses ephemeral `/tmp` SQLite.
+4. Redeploy. `vercel.json` sets `maxDuration` for generation workloads.
+
+If you see `FUNCTION_INVOCATION_FAILED` / 500, open the deployment **Logs** tab — the usual cause is a missing `SECRET_KEY`.
 
 ```bash
 vercel          # preview

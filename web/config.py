@@ -1,5 +1,4 @@
 import os
-import sys
 from datetime import timedelta
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -15,8 +14,11 @@ _IS_PRODUCTION = (
 
 def _require_production_secret(name: str, value: str | None, default: str) -> str:
     if _IS_PRODUCTION and (not value or value == default):
-        print(f'FATAL: {name} must be set in production.', file=sys.stderr)
-        sys.exit(1)
+        # Raise (do not sys.exit): Vercel treats process exit as FUNCTION_INVOCATION_FAILED.
+        raise RuntimeError(
+            f'{name} must be set as an environment variable in production '
+            f'(Vercel Project Settings → Environment Variables). See .env.example.'
+        )
     return value or default
 
 
@@ -24,6 +26,10 @@ def _database_url() -> str:
     """Normalize hosted Postgres URLs (Railway/Vercel often use postgres://)."""
     url = os.environ.get('DATABASE_URL')
     if not url:
+        # Vercel's filesystem is read-only except /tmp — SQLite in the app
+        # directory crashes create_all() with FUNCTION_INVOCATION_FAILED.
+        if os.environ.get('VERCEL'):
+            return 'sqlite:////tmp/syngen.db'
         return 'sqlite:///' + os.path.join(basedir, 'syngen.db')
     if url.startswith('postgres://'):
         return 'postgresql://' + url[len('postgres://'):]
