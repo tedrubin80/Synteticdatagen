@@ -3,7 +3,6 @@
   "functions": {
     "wsgi.py": {
       "maxDuration": 60,
-      "memory": 1024,
       "excludeFiles": "{api/**,cli/**,examples/**,nginx/**,systemd/**,test_*.py,**/*_test.py,.git/**}"
     }
   }
